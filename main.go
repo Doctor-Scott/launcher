@@ -1,3 +1,8 @@
+/*
+Copyright © 2024 NAME HERE <EMAIL ADDRESS>
+
+*/
+
 // NOTE
 // Basically I have a bunch of little scripts that I use from time to time.
 // I want to create a cli tool 'launchpad' in go that i can use as either a cli tool with cobra or tui application with charm.
@@ -56,3 +61,15 @@
 // so thats fun
 
 // }
+
+package main
+
+import "launcher/cmd"
+
+// import "launcher/testing"
+
+func main() {
+	// testing.Main()
+
+	cmd.Execute()
+}
