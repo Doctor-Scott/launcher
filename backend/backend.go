@@ -1,16 +1,15 @@
 package backend
 
 import (
-	// "bytes"
-	"fmt"
-	// "io"
 	"bufio"
+	"bytes"
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"strings"
 )
-
-// const DEFAULT_SCRIPT_PATH string = "/Users/felix/.scripts/"
 
 func ReadStdin() []byte {
 	var stdin = []byte{}
@@ -28,9 +27,7 @@ func ReadStdin() []byte {
 }
 
 func getFiles(scriptPath string) []string {
-	if scriptPath == "" {
-		scriptPath = os.Getenv("DEFAULT_SCRIPT_PATH")
-	}
+	scriptPath = resolvePath(scriptPath)
 
 	entries, err := os.ReadDir(scriptPath)
 	if err != nil {
@@ -39,7 +36,6 @@ func getFiles(scriptPath string) []string {
 	files := []string{}
 
 	for _, e := range entries {
-		// fmt.Println(e.Name())
 		if !e.IsDir() {
 			files = append(files, e.Name())
 		}
@@ -53,7 +49,21 @@ type Script struct {
 	Args []string
 }
 
+func resolvePath(path string) string {
+	if path == "" {
+		return os.Getenv("DEFAULT_SCRIPT_PATH")
+	}
+
+	var err error
+	path, err = filepath.Abs(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return path + "/"
+}
 func GetStructure(path string) []Script {
+	path = resolvePath(path)
+
 	files := getFiles(path)
 	scripts := []Script{}
 	for _, file := range files {
@@ -62,89 +72,78 @@ func GetStructure(path string) []Script {
 	return scripts
 }
 
-func RunScript(script Script) []byte {
-	//https://www.youtube.com/watch?v=jYqFUdFUej4&t=258s
+func RunScript(script Script, stdin []byte) []byte {
 	fmt.Println("Running", script.Name)
 	cmd := exec.Command(script.Path)
 
+	if len(stdin) > 0 {
+		stdinBuffer := bytes.NewBuffer(stdin)
+		cmd.Stdin = stdinBuffer
+	}
+
 	stdout, err := cmd.CombinedOutput()
+	saveStdout(stdout)
 	if err != nil {
 		fmt.Println(err)
 	}
-	// fmt.Println(string(output))
-	// new_output, err := exec.Command("/bin/zsh", string(output)+" | vim -").Output()
+	return stdout
+}
 
-	// fs, err := os.Create("file.txt")
-	// defer fs.Close()
-	// fs.Write(stdout)
-	// fs.Sync()
-	// fs.Close()
+func RunKnownScript(command string, stdin []byte) []byte {
+	scriptName, args := getScriptNameAndArgs(command)
 
-	// cmd := exec.Command("nvim", "-u", "NONE", "-", "+set noswapfile")
-	// buffer := bytes.NewBuffer(output)
-	// cmd.Stdin = buffer
-	// fmt.Println("we are running nvim")
-	// // cmd.Stdin = os.Stdin
-	//
-	// // var outputBuffer bytes.Buffer
-	// outputBuffer := os.Stdout
-	// cmd.Stdout = outputBuffer
-	//
-	// // cmd.Stdout =
-	//
-	// // err = cmd.Run()
-	// fmt.Println(outputBuffer)
-	// fmt.Println("we are done running nvim")
+	cmd := exec.Command(scriptName, args...)
 
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
+	if len(stdin) > 0 {
+		stdinBuffer := bytes.NewBuffer(stdin)
+		cmd.Stdin = stdinBuffer
+	}
 
-	// if _, err := io.Copy(os.Stdout, outputBuffer); err != nil {
-	// 	log.Fatalf("Error writing to stdout: %v", err)
-	// }
+	stdout, err := cmd.CombinedOutput()
+	saveStdout(stdout)
+
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	return stdout
 }
 
-func RunKnownScript(scriptName string) []byte {
-	cmd := exec.Command(scriptName)
-	stdout, err := cmd.CombinedOutput()
-	// fs, err := os.Create("file.txt")
-	// defer fs.Close()
-	// fs.Write(output)
-	// fs.Sync()
-	// fs.Close()
+func getScriptNameAndArgs(command string) (string, []string) {
+	splitCommand := strings.Split(command, " ")
 
-	// cmd := exec.Command("nvim", "-u", "NONE", "-", "+set noswapfile")
-	// buffer := bytes.NewBuffer(output)
-	// cmd.Stdin = buffer
-	// fmt.Println("we are running nvim")
-	// // cmd.Stdin = os.Stdin
-	//
-	// // var outputBuffer bytes.Buffer
-	// outputBuffer := os.Stdout
-	// cmd.Stdout = outputBuffer
-	//
-	// // cmd.Stdout =
-	//
-	// err = cmd.Run()
-	// fmt.Println(outputBuffer)
-	// fmt.Println("we are done running nvim")
-	//
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
+	scriptName := splitCommand[0]
+	args := splitCommand[1:]
+	//rejoin quoted args
+	for i, arg := range args {
+		if strings.HasPrefix(arg, "\"") && strings.HasSuffix(arg, "\"") {
+			args[i] = strings.Trim(arg, "\"")
+		}
+	}
 
-	// if _, err := io.Copy(os.Stdout, outputBuffer); err != nil {
-	// 	log.Fatalf("Error writing to stdout: %v", err)
-	// }
+	return scriptName, args
+}
 
-	// RunScript("", scriptName)
+func saveStdout(stdout []byte) {
+	fs, err := os.Create("/tmp/launcher.txt")
 	if err != nil {
 		fmt.Println(err)
 	}
-	// fmt.Println("\n", string(output))
+	defer fs.Close()
+	fs.Write(stdout)
+	fs.Sync()
+	fs.Close()
+}
+
+func RunInVim() []byte {
+	cmd := exec.Command("nvim", "/tmp/launcher.txt")
+
+	stdout, err := cmd.CombinedOutput()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	return stdout
 }
 
@@ -154,11 +153,6 @@ func PrintStructure(path string) {
 	}
 }
 
-// NOTE
-// you could have 2 options for running a workflow
-// 1 that runs sync, manually taking the full output of one and putting it into another
-// and one that builds the scipt as a chain
-// need to make sure launcher can take stdin and pass it to the script
 func joinScripts(stdin []byte, scripts []Script) {
 
 }

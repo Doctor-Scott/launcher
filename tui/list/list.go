@@ -1,16 +1,15 @@
 package tui_list
 
 import (
+	"bytes"
 	"fmt"
-	"os"
-
-	backend "launcher/backend"
-	tui_input "launcher/tui/input"
-	"time"
-
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	backend "launcher/backend"
+	tui_input "launcher/tui/input"
+	"os"
+	"os/exec"
 )
 
 var docStyle = lipgloss.NewStyle().Margin(1, 2)
@@ -25,8 +24,11 @@ func (i item) Description() string { return i.desc }
 func (i item) FilterValue() string { return i.title }
 
 type model struct {
-	list list.Model
+	list   list.Model
+	stdout []byte
 }
+
+type vimFinishedMsg []byte
 
 func (m model) Init() tea.Cmd {
 	return nil
@@ -35,6 +37,9 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
+	case vimFinishedMsg:
+		m.stdout = []byte(msg)
+		return m, nil
 	case tea.KeyMsg:
 		if msg.String() == "ctrl+c" {
 			return m, tea.Quit
@@ -44,23 +49,53 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				command := tui_input.Input("Script:")
 
 				if command != "" {
-					stdout := backend.RunKnownScript(command)
-					// fmt.Scanln()
-					fmt.Println(string(stdout))
+					stdout := backend.RunKnownScript(command, m.stdout)
+					m.stdout = stdout
 				}
 			} else {
-				stdout := backend.RunScript(m.list.SelectedItem().(item).script)
-				fmt.Println(string(stdout))
+				stdout := backend.RunScript(m.list.SelectedItem().(item).script, m.stdout)
+				m.stdout = stdout
 			}
-			duration := 2 * time.Second
-			time.Sleep(duration)
 			cmd = func() tea.Msg {
 				return tea.ClearScreen()
 			}
 			m.list.ResetSelected()
 			return m, cmd
-			// m.list, cmd = m.list.Update(msg)
-			// return m, cmd
+		}
+		if msg.String() == "c" {
+			//clear stdout
+			m.stdout = []byte{}
+
+		}
+		if msg.String() == "e" {
+			//edit script
+			if m.list.SelectedItem().(item).title != "Input" {
+				cmd := exec.Command("nvim", m.list.SelectedItem().(item).script.Path)
+				m.list.ResetSelected()
+				return m, tea.ExecProcess(cmd, func(err error) tea.Msg {
+					if err != nil {
+						return fmt.Errorf("failed to run : %w", err)
+					}
+					return nil
+				})
+
+			}
+		}
+		if msg.String() == "v" {
+			// run script in editor
+			m.list.ResetSelected()
+			cmd := exec.Command("vipe")
+			cmd.Stdin = bytes.NewBuffer(m.stdout)
+			var outBuf bytes.Buffer
+			cmd.Stdout = &outBuf
+			cmd.Stderr = os.Stderr
+
+			return m, tea.ExecProcess(cmd, func(err error) tea.Msg {
+				if err != nil {
+					return fmt.Errorf("failed to run vipe: %w", err)
+				}
+				return vimFinishedMsg(outBuf.Bytes())
+			})
 		}
 	case tea.WindowSizeMsg:
 		h, v := docStyle.GetFrameSize()
