@@ -4,6 +4,7 @@ import (
 	// "bytes"
 	"fmt"
 	// "io"
+	"bufio"
 	"log"
 	"os"
 	"os/exec"
@@ -11,8 +12,22 @@ import (
 
 // const DEFAULT_SCRIPT_PATH string = "/Users/felix/.scripts/"
 
-func getFiles(scriptPath string) []string {
+func ReadStdin() []byte {
+	var stdin = []byte{}
+	stat, _ := os.Stdin.Stat()
+	if (stat.Mode() & os.ModeCharDevice) == 0 {
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			stdin = append(stdin, scanner.Bytes()...)
+		}
+		if err := scanner.Err(); err != nil {
+			log.Fatal(err)
+		}
+	}
+	return stdin
+}
 
+func getFiles(scriptPath string) []string {
 	if scriptPath == "" {
 		scriptPath = os.Getenv("DEFAULT_SCRIPT_PATH")
 	}

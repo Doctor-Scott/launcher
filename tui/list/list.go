@@ -87,6 +87,8 @@ func Main(path string) {
 	m := model{list: list.New(items, list.NewDefaultDelegate(), 0, 0)}
 	m.list.Title = "Running a script are we???"
 
+	m.stdout = backend.ReadStdin()
+
 	p := tea.NewProgram(m, tea.WithAltScreen())
 
 	if _, err := p.Run(); err != nil {
