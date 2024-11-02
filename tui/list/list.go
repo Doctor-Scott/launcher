@@ -34,6 +34,16 @@ func (m model) Init() tea.Cmd {
 	return nil
 }
 
+func debug(m model) model {
+	fmt.Println(m.currentPath)
+	fmt.Println("")
+	fmt.Println(m.list.Items())
+	fmt.Println("")
+	fmt.Println(string(m.stdout))
+	fmt.Println("")
+	return m
+}
+
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
@@ -66,6 +76,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			//clear stdout
 			m.stdout = []byte{}
 
+		}
+		if msg.String() == "d" {
+			m = debug(m)
+			return m, nil
 		}
 		if msg.String() == "e" {
 			//edit script
