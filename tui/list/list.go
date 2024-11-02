@@ -81,6 +81,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m = debug(m)
 			return m, nil
 		}
+		if msg.String() == "r" {
+			return m, func() tea.Msg { return tea.ClearScreen() }
+
+		}
 		if msg.String() == "e" {
 			//edit script
 			if m.list.SelectedItem().(item).title != "Input" {
