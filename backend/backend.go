@@ -27,7 +27,7 @@ func ReadStdin() []byte {
 }
 
 func getFiles(scriptPath string) []string {
-	scriptPath = resolvePath(scriptPath)
+	scriptPath = ResolvePath(scriptPath)
 
 	entries, err := os.ReadDir(scriptPath)
 	if err != nil {
@@ -49,7 +49,7 @@ type Script struct {
 	Args []string
 }
 
-func resolvePath(path string) string {
+func ResolvePath(path string) string {
 	if path == "" {
 		return os.Getenv("DEFAULT_SCRIPT_PATH")
 	}
@@ -62,7 +62,7 @@ func resolvePath(path string) string {
 	return path + "/"
 }
 func GetStructure(path string) []Script {
-	path = resolvePath(path)
+	path = ResolvePath(path)
 
 	files := getFiles(path)
 	scripts := []Script{}
