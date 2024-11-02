@@ -117,6 +117,19 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			}
 		}
+		if msg.String() == "n" {
+			// fmt.Printf(m.currentPath)
+			cmd := exec.Command("nvim", "--cmd", "cd"+m.currentPath+" | enew")
+			m.list.ResetSelected()
+
+			return m, tea.ExecProcess(cmd, func(err error) tea.Msg {
+				if err != nil {
+					return fmt.Errorf("failed to run : %w", err)
+				}
+				return updateStructureMsg(true)
+			})
+
+		}
 		if msg.String() == "v" {
 			// run script in editor
 			m.list.ResetSelected()
