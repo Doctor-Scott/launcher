@@ -24,8 +24,9 @@ func (i item) Description() string { return i.desc }
 func (i item) FilterValue() string { return i.title }
 
 type model struct {
-	list   list.Model
-	stdout []byte
+	list        list.Model
+	stdout      []byte
+	currentPath string
 }
 
 type vimFinishedMsg []byte
@@ -34,6 +35,18 @@ func (m model) Init() tea.Cmd {
 	return nil
 }
 
+func updateModelList(m model) model {
+	structure := backend.GetStructure(m.currentPath)
+	items := []list.Item{}
+
+	items = append(items, item{title: "Input", desc: "Enter a script"})
+	for _, script := range structure {
+		items = append(items, item{title: script.Name, script: script})
+	}
+	m.list = list.New(items, list.NewDefaultDelegate(), 0, 0)
+	m.list.Title = "Running a script are we???"
+	return m
+}
 func debug(m model) model {
 	fmt.Println(m.currentPath)
 	fmt.Println("")
@@ -129,16 +142,11 @@ func (m model) View() string {
 }
 
 func Main(path string) {
-	structure := backend.GetStructure(path)
-	items := []list.Item{}
+	path = backend.ResolvePath(path)
 
-	items = append(items, item{title: "Input", desc: "Enter a script"})
-	for _, script := range structure {
-		items = append(items, item{title: script.Name, script: script})
-	}
-
-	m := model{list: list.New(items, list.NewDefaultDelegate(), 0, 0)}
-	m.list.Title = "Running a script are we???"
+	var m model
+	m.currentPath = path
+	m = updateModelList(m)
 
 	m.stdout = backend.ReadStdin()
 
