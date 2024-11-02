@@ -30,6 +30,7 @@ type model struct {
 }
 
 type vimFinishedMsg []byte
+type updateStructureMsg bool
 
 func (m model) Init() tea.Cmd {
 	return nil
@@ -47,6 +48,7 @@ func updateModelList(m model) model {
 	m.list.Title = "Running a script are we???"
 	return m
 }
+
 func debug(m model) model {
 	fmt.Println(m.currentPath)
 	fmt.Println("")
@@ -60,6 +62,9 @@ func debug(m model) model {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
+	case updateStructureMsg:
+		m = updateModelList(m)
+		return m, tea.WindowSize()
 	case vimFinishedMsg:
 		m.stdout = []byte(msg)
 		return m, nil
@@ -107,7 +112,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					if err != nil {
 						return fmt.Errorf("failed to run : %w", err)
 					}
-					return nil
+					return updateStructureMsg(true)
 				})
 
 			}
