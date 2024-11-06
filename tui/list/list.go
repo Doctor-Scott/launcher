@@ -10,6 +10,7 @@ import (
 	tui_input "launcher/tui/input"
 	"os"
 	"os/exec"
+	"strconv"
 )
 
 var docStyle = lipgloss.NewStyle().Margin(1, 2)
@@ -33,6 +34,7 @@ type model struct {
 
 type vimFinishedMsg []byte
 type updateStructureMsg bool
+type generateSelectedItemViewMsg bool
 
 func (m model) Init() tea.Cmd {
 	return nil
@@ -76,6 +78,46 @@ func updateModelList(m model) model {
 	return m
 }
 
+func emptySelected(m model) model {
+	for i, listItem := range m.list.Items() {
+		if item, ok := listItem.(item); ok {
+			item.script.Selected = false
+			if item.title != "Input" {
+				item.desc = ""
+			}
+			m.list.SetItem(i, item)
+		}
+	}
+	return m
+}
+
+func generateSelectedItemView(m model) model {
+	if len(m.chain) == 0 {
+		return emptySelected(m)
+	}
+	for i, listItem := range m.list.Items() {
+		if item, ok := listItem.(item); ok {
+			for scriptIndex, chainScript := range m.chain {
+				if item.script.Name == chainScript.Name {
+					item.script.Selected = true
+
+					item.desc = "selected " + strconv.Itoa(scriptIndex+1) + " of " + strconv.Itoa(len(m.chain))
+					m.list.SetItem(i, item)
+					break
+				} else {
+					item.script.Selected = false
+					if item.title != "Input" {
+						item.desc = ""
+					}
+					m.list.SetItem(i, item)
+				}
+			}
+		}
+	}
+
+	return m
+}
+
 func debug(m model) model {
 	fmt.Println(m.currentPath)
 	fmt.Println("")
@@ -91,6 +133,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case updateStructureMsg:
 		m = updateModelList(m)
+		return m, tea.WindowSize()
+	case generateSelectedItemViewMsg:
+		m = generateSelectedItemView(m)
 		return m, tea.WindowSize()
 	case vimFinishedMsg:
 		m.stdout = []byte(msg)
@@ -126,6 +171,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m = debug(m)
 			return m, nil
 		}
+		if msg.String() == "a" {
+			m.chain = backend.AddScriptToChain(m.list.SelectedItem().(item).script, m.chain)
+			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
+
+		}
+		if msg.String() == "s" {
+			m.chain = backend.RemoveScriptFromChain(m.list.SelectedItem().(item).script, m.chain)
+			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
+
+		}
+
 		if msg.String() == "r" {
 			return m, func() tea.Msg { return tea.ClearScreen() }
 

@@ -156,6 +156,19 @@ func PrintStructure(path string) {
 
 func joinScripts(stdin []byte, scripts []Script) {
 
+func AddScriptToChain(scriptToAdd Script, scripts []Script) []Script {
+	scripts = append(scripts, scriptToAdd)
+	return scripts
+
+}
+
+func RemoveScriptFromChain(scriptToRemove Script, scripts []Script) []Script {
+	for i, script := range scripts {
+		if script.Name == scriptToRemove.Name && script.Path == scriptToRemove.Path {
+			return append(scripts[:i], scripts[i+1:]...)
+		}
+	}
+	return scripts
 }
 
 func runScriptWithStdin(stdin []byte, script Script) []byte {
