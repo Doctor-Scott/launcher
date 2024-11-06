@@ -44,9 +44,10 @@ func getFiles(scriptPath string) []string {
 }
 
 type Script struct {
-	Name string
-	Path string
-	Args []string
+	Name     string
+	Path     string
+	Args     []string
+	Selected bool
 }
 
 func ResolvePath(path string) string {

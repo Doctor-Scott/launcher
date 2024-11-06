@@ -15,11 +15,12 @@ import (
 var docStyle = lipgloss.NewStyle().Margin(1, 2)
 
 type item struct {
-	title, desc string
-	script      backend.Script
+	title, titlePretty, desc string
+	script                   backend.Script
+	focused                  bool
 }
 
-func (i item) Title() string       { return i.title }
+func (i item) Title() string       { return i.titlePretty }
 func (i item) Description() string { return i.desc }
 func (i item) FilterValue() string { return i.title }
 
@@ -27,6 +28,7 @@ type model struct {
 	list        list.Model
 	stdout      []byte
 	currentPath string
+	chain       []backend.Script
 }
 
 type vimFinishedMsg []byte
@@ -34,6 +36,30 @@ type updateStructureMsg bool
 
 func (m model) Init() tea.Cmd {
 	return nil
+}
+
+func getCustomDelegate() list.DefaultDelegate {
+	delegate := list.NewDefaultDelegate()
+	delegate.UpdateFunc = func(msg tea.Msg, m *list.Model) tea.Cmd {
+		// make each selected item a different color
+		for i, listItem := range m.Items() {
+			item := listItem.(item)
+
+			if item.script.Selected == true {
+				item.titlePretty = lipgloss.NewStyle().Foreground(lipgloss.Color("#6fe600")).Render(item.title)
+				m.SetItem(i, item)
+			} else {
+				item.titlePretty = lipgloss.NewStyle().Foreground(lipgloss.NoColor{}).Render(item.title)
+				m.SetItem(i, item)
+			}
+		}
+
+		return nil
+	}
+	c := lipgloss.Color("#6fe6fc")
+	delegate.Styles.SelectedTitle = delegate.Styles.SelectedTitle.Foreground(c).BorderLeftForeground(c)
+	delegate.Styles.SelectedDesc = delegate.Styles.SelectedTitle // reuse the title style here
+	return delegate
 }
 
 func updateModelList(m model) model {
@@ -44,7 +70,8 @@ func updateModelList(m model) model {
 	for _, script := range structure {
 		items = append(items, item{title: script.Name, script: script})
 	}
-	m.list = list.New(items, list.NewDefaultDelegate(), 0, 0)
+	delegate := getCustomDelegate()
+	m.list = list.New(items, delegate, 0, 0)
 	m.list.Title = "Running a script are we???"
 	return m
 }
