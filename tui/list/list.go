@@ -119,12 +119,17 @@ func generateSelectedItemView(m model) model {
 }
 
 func debug(m model) model {
-	fmt.Println(m.currentPath)
+	// fmt.Println(m.currentPath)
+	// fmt.Println("")
+	// fmt.Println(m.list.Items())
+	// fmt.Println("")
+	// fmt.Println(string(m.stdout))
 	fmt.Println("")
-	fmt.Println(m.list.Items())
+	fmt.Println(m.chain)
 	fmt.Println("")
-	fmt.Println(string(m.stdout))
-	fmt.Println("")
+	// fmt.Print(m)
+
+	// fmt.Println(m.Items())
 	return m
 }
 
@@ -168,7 +173,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		}
 		if msg.String() == "d" {
-			m = debug(m)
+			debug(m)
 			return m, nil
 		}
 		if msg.String() == "a" {
