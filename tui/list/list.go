@@ -168,8 +168,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, cmd
 		}
 		if msg.String() == "c" {
-			//clear stdout
+			m.chain = []backend.Script{}
 			m.stdout = []byte{}
+			m = generateSelectedItemView(m)
+			return m, func() tea.Msg { return updateStructureMsg(true) }
 
 		}
 		if msg.String() == "d" {
