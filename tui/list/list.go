@@ -214,6 +214,22 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.list.ResetSelected()
 			return m, cmd
 		}
+		if msg.String() == tea.KeySpace.String() {
+			// run script with args
+			if m.list.SelectedItem().(item).title != "Input" {
+				scriptArgs := tui_input.Input("Args:")
+				m = addArgsToScript(m, scriptArgs)
+
+				stdout := backend.RunScript(m.list.SelectedItem().(item).script, m.stdout)
+				m.stdout = stdout
+			}
+			cmd = func() tea.Msg {
+				return tea.ClearScreen()
+			}
+
+			m.list.ResetSelected()
+			return m, cmd
+		}
 		if msg.String() == "c" {
 			m.chain = []backend.Script{}
 			m.stdout = []byte{}

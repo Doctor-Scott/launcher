@@ -75,7 +75,7 @@ func GetStructure(path string) []Script {
 
 func RunScript(script Script, stdin []byte) []byte {
 	fmt.Println("Running", script.Name)
-	cmd := exec.Command(script.Path)
+	cmd := exec.Command(script.Path, script.Args...)
 
 	if len(stdin) > 0 {
 		stdinBuffer := bytes.NewBuffer(stdin)
