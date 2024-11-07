@@ -40,6 +40,8 @@ func (m model) Init() tea.Cmd {
 	return nil
 }
 
+const USE_AND_IN_DESC bool = false
+
 func getCustomDelegate() list.DefaultDelegate {
 	delegate := list.NewDefaultDelegate()
 	delegate.UpdateFunc = func(msg tea.Msg, m *list.Model) tea.Cmd {
@@ -91,17 +93,55 @@ func emptySelected(m model) model {
 	return m
 }
 
+func findScriptIndexes(chain []backend.Script, script backend.Script) []int {
+	indexes := []int{}
+	for i, chainScript := range chain {
+		if chainScript.Name == script.Name {
+			indexes = append(indexes, i)
+		}
+	}
+	return indexes
+}
+
+func generatePositionString(indexes []int, chainLength int) string {
+	desc := "Position: " + strconv.Itoa(indexes[0]+1)
+	if len(indexes) != 1 {
+
+		for i, index := range indexes {
+			if i == 0 {
+				continue
+			}
+			if USE_AND_IN_DESC {
+				if i != len(indexes)-1 {
+					desc += ", "
+				} else {
+					desc += " and "
+				}
+			} else {
+				desc += ", "
+			}
+
+			desc += strconv.Itoa(index + 1)
+		}
+	}
+	desc += " of " + strconv.Itoa(chainLength)
+	return desc
+
+}
+
 func generateSelectedItemView(m model) model {
 	if len(m.chain) == 0 {
 		return emptySelected(m)
 	}
 	for i, listItem := range m.list.Items() {
 		if item, ok := listItem.(item); ok {
-			for scriptIndex, chainScript := range m.chain {
+			for _, chainScript := range m.chain {
 				if item.script.Name == chainScript.Name {
 					item.script.Selected = true
+					indexes := findScriptIndexes(m.chain, item.script)
+					desc := generatePositionString(indexes, len(m.chain))
+					item.desc = desc
 
-					item.desc = "selected " + strconv.Itoa(scriptIndex+1) + " of " + strconv.Itoa(len(m.chain))
 					m.list.SetItem(i, item)
 					break
 				} else {
