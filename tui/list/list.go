@@ -173,6 +173,13 @@ func debug(m model) model {
 	return m
 }
 
+func addArgsToScript(m model, scriptArgs string) model {
+	script := m.list.SelectedItem().(item).script
+	script.Args = append(script.Args, scriptArgs)
+	m.list.SetItem(m.list.Index(), item{title: script.Name, script: script})
+	return m
+}
+
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
@@ -219,8 +226,29 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 		}
 		if msg.String() == "a" {
-			m.chain = backend.AddScriptToChain(m.list.SelectedItem().(item).script, m.chain)
+			// add script
+			if m.list.SelectedItem().(item).title == "Input" {
+				command := tui_input.Input("Script:")
+				if command != "" {
+					scriptName, args := backend.GetScriptNameAndArgs(command)
+					script := backend.Script{Name: scriptName, Path: scriptName, Args: args}
+					m.chain = backend.AddScriptToChain(script, m.chain)
+				}
+			} else {
+				m.chain = backend.AddScriptToChain(m.list.SelectedItem().(item).script, m.chain)
+			}
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
+
+		}
+		if msg.String() == "A" {
+			// add script with args
+			if m.list.SelectedItem().(item).title != "Input" {
+				scriptArgs := tui_input.Input("Args:")
+				m = addArgsToScript(m, scriptArgs)
+				m.chain = backend.AddScriptToChain(m.list.SelectedItem().(item).script, m.chain)
+				return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
+			}
+			return m, nil
 
 		}
 		if msg.String() == "s" {

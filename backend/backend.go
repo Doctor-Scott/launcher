@@ -91,7 +91,7 @@ func RunScript(script Script, stdin []byte) []byte {
 }
 
 func RunKnownScript(command string, stdin []byte) []byte {
-	scriptName, args := getScriptNameAndArgs(command)
+	scriptName, args := GetScriptNameAndArgs(command)
 
 	cmd := exec.Command(scriptName, args...)
 
@@ -110,7 +110,7 @@ func RunKnownScript(command string, stdin []byte) []byte {
 	return stdout
 }
 
-func getScriptNameAndArgs(command string) (string, []string) {
+func GetScriptNameAndArgs(command string) (string, []string) {
 	splitCommand := strings.Split(command, " ")
 
 	scriptName := splitCommand[0]
