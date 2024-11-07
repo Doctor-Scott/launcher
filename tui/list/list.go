@@ -197,6 +197,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		}
 		if msg.String() == "enter" {
+			// standard run of known script or input command
 			if m.list.SelectedItem().(item).title == "Input" {
 				command := tui_input.Input("Script:")
 
@@ -231,6 +232,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, cmd
 		}
 		if msg.String() == "c" {
+			// clear state
 			m.chain = []backend.Script{}
 			m.stdout = []byte{}
 			m = generateSelectedItemView(m)
@@ -268,16 +270,19 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		}
 		if msg.String() == "s" {
+			// remove script from chain
 			m.chain = backend.RemoveScriptFromChain(m.list.SelectedItem().(item).script, m.chain)
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 
 		}
 
 		if msg.String() == "r" {
+			// refresh view
 			return m, func() tea.Msg { return tea.ClearScreen() }
 
 		}
 		if msg.String() == "R" {
+			// run chain
 			stdout := backend.RunChain(m.stdout, m.chain)
 			m.stdout = stdout
 			cmd = func() tea.Msg {
@@ -291,7 +296,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		}
 		if msg.String() == "e" {
-			//edit script
+			//edit file under cursor
 			if m.list.SelectedItem().(item).title != "Input" {
 				cmd := exec.Command("nvim", m.list.SelectedItem().(item).script.Path)
 				m.list.ResetSelected()
@@ -305,7 +310,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		}
 		if msg.String() == "n" {
-			// fmt.Printf(m.currentPath)
+			// open nvim in launcher directory
 			cmd := exec.Command("nvim", "--cmd", "cd"+m.currentPath+" | enew")
 			m.list.ResetSelected()
 
@@ -318,7 +323,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		}
 		if msg.String() == "v" {
-			// run script in editor
+			// open stdout from last script in editor
 			m.list.ResetSelected()
 			cmd := exec.Command("vipe")
 			cmd.Stdin = bytes.NewBuffer(m.stdout)
