@@ -277,6 +277,19 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, func() tea.Msg { return tea.ClearScreen() }
 
 		}
+		if msg.String() == "R" {
+			stdout := backend.RunChain(m.stdout, m.chain)
+			m.stdout = stdout
+			cmd = func() tea.Msg {
+				return tea.ClearScreen()
+			}
+
+			m.list.ResetSelected()
+			m.chain = []backend.Script{}
+
+			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
+
+		}
 		if msg.String() == "e" {
 			//edit script
 			if m.list.SelectedItem().(item).title != "Input" {

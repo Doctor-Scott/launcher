@@ -154,7 +154,18 @@ func PrintStructure(path string) {
 	}
 }
 
-func joinScripts(stdin []byte, scripts []Script) {
+func removeScript(slice []Script, s int) []Script {
+	return append(slice[:s], slice[s+1:]...)
+}
+
+func RunChain(stdin []byte, scripts []Script) []byte {
+	if len(scripts) == 0 {
+		return stdin
+	}
+	stdout := RunScript(scripts[0], stdin)
+	return RunChain(stdout, removeScript(scripts, 0))
+
+}
 
 func AddScriptToChain(scriptToAdd Script, scripts []Script) []Script {
 	scripts = append(scripts, scriptToAdd)
