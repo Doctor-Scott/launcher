@@ -13,8 +13,6 @@ import (
 	"strconv"
 )
 
-var docStyle = lipgloss.NewStyle().Margin(1, 2)
-
 type item struct {
 	title, titlePretty, desc string
 	script                   backend.Script
@@ -24,13 +22,6 @@ type item struct {
 func (i item) Title() string       { return i.titlePretty }
 func (i item) Description() string { return i.desc }
 func (i item) FilterValue() string { return i.title }
-
-type model struct {
-	list        list.Model
-	stdout      []byte
-	currentPath string
-	chain       []backend.Script
-}
 
 type vimFinishedMsg []byte
 type updateStructureMsg bool
@@ -163,9 +154,9 @@ func debug(m model) model {
 	// fmt.Println("")
 	// fmt.Println(m.list.Items())
 	// fmt.Println("")
-	// fmt.Println(string(m.stdout))
 	fmt.Println("")
 	fmt.Println(m.chain)
+	// fmt.Println(string(m.stdout))
 	fmt.Println("")
 	// fmt.Print(m)
 
@@ -180,7 +171,7 @@ func addArgsToScript(m model, scriptArgs string) model {
 	return m
 }
 
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func ListUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case updateStructureMsg:
@@ -241,7 +232,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		if msg.String() == "d" {
 			debug(m)
-			return m, nil
+			return m, tea.Println(m)
 		}
 		if msg.String() == "a" {
 			// add script
@@ -274,6 +265,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.chain = backend.RemoveScriptFromChain(m.list.SelectedItem().(item).script, m.chain)
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 
+		}
+		if msg.String() == "S" {
+			//save chain
+			// TODO
+			// might be fun to allow people to share these chains once created
 		}
 
 		if msg.String() == "r" {
@@ -338,6 +334,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return vimFinishedMsg(outBuf.Bytes())
 			})
 		}
+
+		// if msg.String() == "x" {
+		// 	// set chmod +x on script
+		//
+		// }
 	case tea.WindowSizeMsg:
 		h, v := docStyle.GetFrameSize()
 		m.list.SetSize(msg.Width-h, msg.Height-v)
@@ -345,29 +346,4 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	m.list, cmd = m.list.Update(msg)
 	return m, cmd
-}
-
-func (m model) View() string {
-	return docStyle.Render(m.list.View())
-}
-
-func Main(path string) {
-	path = backend.ResolvePath(path)
-
-	var m model
-	m.currentPath = path
-	m = updateModelList(m)
-
-	m.stdout = backend.ReadStdin()
-
-	p := tea.NewProgram(m, tea.WithAltScreen())
-
-	if _, err := p.Run(); err != nil {
-		fmt.Println("Error running program:", err)
-		os.Exit(1)
-	}
-}
-
-func main() {
-	Main("")
 }
