@@ -115,11 +115,16 @@ func GetScriptNameAndArgs(command string) (string, []string) {
 
 	scriptName := splitCommand[0]
 	args := splitCommand[1:]
-	//rejoin quoted args
+
+	//rejoin quoted args and expand environment variables
 	for i, arg := range args {
 		if strings.HasPrefix(arg, "\"") && strings.HasSuffix(arg, "\"") {
 			args[i] = strings.Trim(arg, "\"")
 		}
+		if strings.HasPrefix(arg, "'") && strings.HasSuffix(arg, "'") {
+			args[i] = strings.Trim(arg, "'")
+		}
+		args[i] = os.ExpandEnv(arg)
 	}
 
 	return scriptName, args
