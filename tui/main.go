@@ -6,6 +6,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	backend "launcher/backend"
+	C "launcher/globalConstants"
 	"os"
 )
 
@@ -28,20 +29,20 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch msg.(type) {
 	case inputFinishedMsg:
-		switch m.inputModel.inputType {
-		case "runScript":
+		switch m.inputModel.returnCommand {
+		case C.RUN_SCRIPT:
 			command := m.inputModel.textInput.Value()
 			if command != "" {
 				stdout := backend.RunKnownScript(command, m.stdout)
 				m.stdout = stdout
 			}
-		case "addArgsToScriptAndRun":
+		case C.ADD_ARGS_TO_SCRIPT_AND_RUN:
 			scriptArgs := m.inputModel.textInput.Value()
 			m = addArgsToScript(m, scriptArgs)
 
 			stdout := backend.RunScript(m.list.SelectedItem().(item).script, m.stdout)
 			m.stdout = stdout
-		case "addScriptToChain":
+		case C.ADD_SCRIPT_TO_CHAIN:
 			command := m.inputModel.textInput.Value()
 			if command != "" {
 				scriptName, args := backend.GetScriptNameAndArgs(command)
@@ -49,7 +50,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.chain = backend.AddScriptToChain(script, m.chain)
 			}
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
-		case "addArgsToScriptThenAddToChain":
+		case C.ADD_ARGS_TO_SCRIPT_THEN_ADD_TO_CHAIN:
 			scriptArgs := m.inputModel.textInput.Value()
 			m = addArgsToScript(m, scriptArgs)
 			m.chain = backend.AddScriptToChain(m.list.SelectedItem().(item).script, m.chain)

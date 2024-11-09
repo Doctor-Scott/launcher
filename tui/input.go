@@ -14,14 +14,14 @@ type inputFinishedMsg bool
 type inputRejectedMsg bool
 
 type inputModel struct {
-	textInput textinput.Model
-	err       error
-	prompt    string
-	Selected  bool
-	inputType string
+	textInput     textinput.Model
+	err           error
+	prompt        string
+	Selected      bool
+	returnCommand int
 }
 
-func initialInputModel(prompt string, inputType string) inputModel {
+func initialInputModel(prompt string, returnCommand int) inputModel {
 	ti := textinput.New()
 	// ti.Placeholder = prompt
 	ti.Focus()
@@ -29,11 +29,11 @@ func initialInputModel(prompt string, inputType string) inputModel {
 	ti.Width = 20
 
 	return inputModel{
-		textInput: ti,
-		err:       nil,
-		prompt:    prompt,
-		Selected:  false,
-		inputType: inputType,
+		textInput:     ti,
+		err:           nil,
+		prompt:        prompt,
+		Selected:      false,
+		returnCommand: returnCommand,
 	}
 }
 

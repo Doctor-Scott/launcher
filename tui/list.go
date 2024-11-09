@@ -7,6 +7,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	backend "launcher/backend"
+	C "launcher/globalConstants"
 	"os"
 	"os/exec"
 	"strconv"
@@ -185,7 +186,7 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == "enter" {
 			// standard run of known script or input command
 			if m.list.SelectedItem().(item).title == "Input" {
-				m.inputModel = initialInputModel("Script:", "runScript")
+				m.inputModel = initialInputModel("Script:", C.RUN_SCRIPT)
 				m.currentView = "input"
 				return m, nil
 			} else {
@@ -200,7 +201,7 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == tea.KeySpace.String() {
 			// run script with args
 			if m.list.SelectedItem().(item).title != "Input" {
-				m.inputModel = initialInputModel("Args:", "addArgsToScriptAndRun")
+				m.inputModel = initialInputModel("Args:", C.ADD_ARGS_TO_SCRIPT_AND_RUN)
 				m.currentView = "input"
 				cmd = func() tea.Msg {
 					return tea.ClearScreen()
@@ -223,7 +224,7 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == "a" {
 			// add script
 			if m.list.SelectedItem().(item).title == "Input" {
-				m.inputModel = initialInputModel("Script:", "addScriptToChain")
+				m.inputModel = initialInputModel("Script:", C.ADD_SCRIPT_TO_CHAIN)
 				m.currentView = "input"
 				return m, nil
 			} else {
@@ -235,7 +236,7 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == "A" {
 			// add script with args
 			if m.list.SelectedItem().(item).title != "Input" {
-				m.inputModel = initialInputModel("Args:", "addArgsToScriptThenAddToChain")
+				m.inputModel = initialInputModel("Args:", C.ADD_ARGS_TO_SCRIPT_THEN_ADD_TO_CHAIN)
 				m.currentView = "input"
 				return m, nil
 			}
