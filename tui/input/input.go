@@ -1,72 +1,58 @@
 package tui_input
 
-// A simple program demonstrating the text input component from the Bubbles
-// component library.
-
 import (
 	"fmt"
-	"log"
-
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 )
-
-func Input(prompt string) string {
-	p := tea.NewProgram(initialModel(prompt))
-	m, err := p.Run()
-	if err != nil {
-		log.Fatal(err)
-	}
-	finalModel := m.(model)
-	return finalModel.textInput.Value()
-}
 
 type (
 	errMsg error
 )
 
-type model struct {
-	textInput textinput.Model
+type InputFinishedMsg bool
+type InputRejectedMsg bool
+
+type InputModel struct {
+	TextInput textinput.Model
 	err       error
 	prompt    string
+	Selected  bool
+	InputType string
 }
 
-func initialModel(prompt string) model {
+func InitialInputModel(prompt string, inputType string) InputModel {
 	ti := textinput.New()
 	// ti.Placeholder = prompt
 	ti.Focus()
 	ti.CharLimit = 156
 	ti.Width = 20
 
-	return model{
-		textInput: ti,
+	return InputModel{
+		TextInput: ti,
 		err:       nil,
 		prompt:    prompt,
+		Selected:  false,
+		InputType: inputType,
 	}
 }
 
-func (m model) Init() tea.Cmd {
-	cmd := func() tea.Msg {
-		return tea.ClearScreen()
-	}
-	return tea.Sequence(cmd, textinput.Blink)
-}
-
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func InputUpdate(m InputModel, msg tea.Msg) (InputModel, tea.Cmd) {
 	var cmd tea.Cmd
 
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.Type {
-		case tea.KeyEnter, tea.KeyCtrlC, tea.KeyEsc:
+		case tea.KeyEnter:
 			cmd = func() tea.Msg {
 				return tea.ClearScreen()
 			}
-			// quit := func() tea.Msg {
-			// 	return tea.Quit
-			// }
+			m.Selected = true
 
-			return m, tea.Sequence(cmd, tea.Quit)
+			return m, tea.Sequence(cmd, func() tea.Msg { return InputFinishedMsg(true) })
+
+		case tea.KeyCtrlC, tea.KeyEsc:
+			return m, tea.Sequence(cmd, func() tea.Msg { return InputRejectedMsg(true) })
 		}
 
 	// We handle errors just like any other message
@@ -75,14 +61,15 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 	}
 
-	m.textInput, cmd = m.textInput.Update(msg)
+	m.TextInput, cmd = m.TextInput.Update(msg)
 	return m, cmd
+
 }
 
-func (m model) View() string {
+func InputView(m InputModel) string {
 	return fmt.Sprintf(
 		m.prompt+"\n\n%s\n\n%s",
-		m.textInput.View(),
+		m.TextInput.View(),
 		"(esc to quit)",
 	) + "\n"
 }

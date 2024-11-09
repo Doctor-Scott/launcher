@@ -27,10 +27,6 @@ type vimFinishedMsg []byte
 type updateStructureMsg bool
 type generateSelectedItemViewMsg bool
 
-func (m model) Init() tea.Cmd {
-	return nil
-}
-
 const USE_AND_IN_DESC bool = false
 
 func getCustomDelegate() list.DefaultDelegate {
@@ -190,37 +186,28 @@ func ListUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == "enter" {
 			// standard run of known script or input command
 			if m.list.SelectedItem().(item).title == "Input" {
-				command := tui_input.Input("Script:")
-
-				if command != "" {
-					stdout := backend.RunKnownScript(command, m.stdout)
-					m.stdout = stdout
-				}
+				m.inputModel = tui_input.InitialInputModel("Script:", "runScript")
+				m.currentView = "input"
+				return m, nil
 			} else {
 				stdout := backend.RunScript(m.list.SelectedItem().(item).script, m.stdout)
 				m.stdout = stdout
+				cmd = func() tea.Msg {
+					return tea.ClearScreen()
+				}
+				return m, cmd
 			}
-			cmd = func() tea.Msg {
-				return tea.ClearScreen()
-			}
-			m.list.ResetSelected()
-			return m, cmd
 		}
 		if msg.String() == tea.KeySpace.String() {
 			// run script with args
 			if m.list.SelectedItem().(item).title != "Input" {
-				scriptArgs := tui_input.Input("Args:")
-				m = addArgsToScript(m, scriptArgs)
-
-				stdout := backend.RunScript(m.list.SelectedItem().(item).script, m.stdout)
-				m.stdout = stdout
+				m.inputModel = tui_input.InitialInputModel("Args:", "addArgsToScriptAndRun")
+				m.currentView = "input"
+				cmd = func() tea.Msg {
+					return tea.ClearScreen()
+				}
+				return m, cmd
 			}
-			cmd = func() tea.Msg {
-				return tea.ClearScreen()
-			}
-
-			m.list.ResetSelected()
-			return m, cmd
 		}
 		if msg.String() == "c" {
 			// clear state
@@ -237,27 +224,22 @@ func ListUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == "a" {
 			// add script
 			if m.list.SelectedItem().(item).title == "Input" {
-				command := tui_input.Input("Script:")
-				if command != "" {
-					scriptName, args := backend.GetScriptNameAndArgs(command)
-					script := backend.Script{Name: scriptName, Path: scriptName, Args: args}
-					m.chain = backend.AddScriptToChain(script, m.chain)
-				}
+				m.inputModel = tui_input.InitialInputModel("Script:", "addScriptToChain")
+				m.currentView = "input"
+				return m, nil
 			} else {
 				m.chain = backend.AddScriptToChain(m.list.SelectedItem().(item).script, m.chain)
+				return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 			}
-			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 
 		}
 		if msg.String() == "A" {
 			// add script with args
 			if m.list.SelectedItem().(item).title != "Input" {
-				scriptArgs := tui_input.Input("Args:")
-				m = addArgsToScript(m, scriptArgs)
-				m.chain = backend.AddScriptToChain(m.list.SelectedItem().(item).script, m.chain)
-				return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
+				m.inputModel = tui_input.InitialInputModel("Args:", "addArgsToScriptThenAddToChain")
+				m.currentView = "input"
+				return m, nil
 			}
-			return m, nil
 
 		}
 		if msg.String() == "s" {
@@ -274,6 +256,7 @@ func ListUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 
 		if msg.String() == "r" {
 			// refresh view
+			m.list.ResetSelected()
 			return m, func() tea.Msg { return tea.ClearScreen() }
 
 		}
@@ -285,7 +268,6 @@ func ListUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 				return tea.ClearScreen()
 			}
 
-			m.list.ResetSelected()
 			m.chain = []backend.Script{}
 
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
@@ -295,7 +277,6 @@ func ListUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 			//edit file under cursor
 			if m.list.SelectedItem().(item).title != "Input" {
 				cmd := exec.Command("nvim", m.list.SelectedItem().(item).script.Path)
-				m.list.ResetSelected()
 				return m, tea.ExecProcess(cmd, func(err error) tea.Msg {
 					if err != nil {
 						return fmt.Errorf("failed to run : %w", err)
@@ -320,7 +301,6 @@ func ListUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		}
 		if msg.String() == "v" {
 			// open stdout from last script in editor
-			m.list.ResetSelected()
 			cmd := exec.Command("vipe")
 			cmd.Stdin = bytes.NewBuffer(m.stdout)
 			var outBuf bytes.Buffer
