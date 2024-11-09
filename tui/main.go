@@ -1,4 +1,4 @@
-package tui_list
+package tui
 
 import (
 	"fmt"
@@ -6,7 +6,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	backend "launcher/backend"
-	tui_input "launcher/tui/input"
 	"os"
 )
 
@@ -18,7 +17,7 @@ type model struct {
 	currentPath string
 	chain       []backend.Script
 	currentView string
-	inputModel  tui_input.InputModel
+	inputModel  inputModel
 }
 
 func (m model) Init() tea.Cmd {
@@ -28,22 +27,22 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch msg.(type) {
-	case tui_input.InputFinishedMsg:
-		switch m.inputModel.InputType {
+	case inputFinishedMsg:
+		switch m.inputModel.inputType {
 		case "runScript":
-			command := m.inputModel.TextInput.Value()
+			command := m.inputModel.textInput.Value()
 			if command != "" {
 				stdout := backend.RunKnownScript(command, m.stdout)
 				m.stdout = stdout
 			}
 		case "addArgsToScriptAndRun":
-			scriptArgs := m.inputModel.TextInput.Value()
+			scriptArgs := m.inputModel.textInput.Value()
 			m = addArgsToScript(m, scriptArgs)
 
 			stdout := backend.RunScript(m.list.SelectedItem().(item).script, m.stdout)
 			m.stdout = stdout
 		case "addScriptToChain":
-			command := m.inputModel.TextInput.Value()
+			command := m.inputModel.textInput.Value()
 			if command != "" {
 				scriptName, args := backend.GetScriptNameAndArgs(command)
 				script := backend.Script{Name: scriptName, Path: scriptName, Args: args}
@@ -51,21 +50,21 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 		case "addArgsToScriptThenAddToChain":
-			scriptArgs := m.inputModel.TextInput.Value()
+			scriptArgs := m.inputModel.textInput.Value()
 			m = addArgsToScript(m, scriptArgs)
 			m.chain = backend.AddScriptToChain(m.list.SelectedItem().(item).script, m.chain)
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 		}
 
-	case tui_input.InputRejectedMsg:
+	case inputRejectedMsg:
 		m.currentView = "list"
 		return m, nil
 	}
 
 	if m.currentView == "list" || m.inputModel.Selected {
-		return ListUpdate(msg, m)
+		return listUpdate(msg, m)
 	}
-	inputModel, cmd := tui_input.InputUpdate(m.inputModel, msg)
+	inputModel, cmd := inputUpdate(m.inputModel, msg)
 	m.inputModel = inputModel
 
 	return m, cmd
@@ -75,7 +74,7 @@ func (m model) View() string {
 	if m.currentView == "list" || m.inputModel.Selected {
 		return docStyle.Render(m.list.View())
 	}
-	return tui_input.InputView(m.inputModel)
+	return inputView(m.inputModel)
 }
 
 func Main(path string) {

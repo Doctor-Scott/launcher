@@ -1,4 +1,4 @@
-package tui_list
+package tui
 
 import (
 	"bytes"
@@ -7,7 +7,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	backend "launcher/backend"
-	tui_input "launcher/tui/input"
 	"os"
 	"os/exec"
 	"strconv"
@@ -167,7 +166,7 @@ func addArgsToScript(m model, scriptArgs string) model {
 	return m
 }
 
-func ListUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
+func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case updateStructureMsg:
@@ -186,7 +185,7 @@ func ListUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == "enter" {
 			// standard run of known script or input command
 			if m.list.SelectedItem().(item).title == "Input" {
-				m.inputModel = tui_input.InitialInputModel("Script:", "runScript")
+				m.inputModel = initialInputModel("Script:", "runScript")
 				m.currentView = "input"
 				return m, nil
 			} else {
@@ -201,7 +200,7 @@ func ListUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == tea.KeySpace.String() {
 			// run script with args
 			if m.list.SelectedItem().(item).title != "Input" {
-				m.inputModel = tui_input.InitialInputModel("Args:", "addArgsToScriptAndRun")
+				m.inputModel = initialInputModel("Args:", "addArgsToScriptAndRun")
 				m.currentView = "input"
 				cmd = func() tea.Msg {
 					return tea.ClearScreen()
@@ -224,7 +223,7 @@ func ListUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == "a" {
 			// add script
 			if m.list.SelectedItem().(item).title == "Input" {
-				m.inputModel = tui_input.InitialInputModel("Script:", "addScriptToChain")
+				m.inputModel = initialInputModel("Script:", "addScriptToChain")
 				m.currentView = "input"
 				return m, nil
 			} else {
@@ -236,7 +235,7 @@ func ListUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == "A" {
 			// add script with args
 			if m.list.SelectedItem().(item).title != "Input" {
-				m.inputModel = tui_input.InitialInputModel("Args:", "addArgsToScriptThenAddToChain")
+				m.inputModel = initialInputModel("Args:", "addArgsToScriptThenAddToChain")
 				m.currentView = "input"
 				return m, nil
 			}

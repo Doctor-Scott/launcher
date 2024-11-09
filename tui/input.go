@@ -1,4 +1,4 @@
-package tui_input
+package tui
 
 import (
 	"fmt"
@@ -10,34 +10,34 @@ type (
 	errMsg error
 )
 
-type InputFinishedMsg bool
-type InputRejectedMsg bool
+type inputFinishedMsg bool
+type inputRejectedMsg bool
 
-type InputModel struct {
-	TextInput textinput.Model
+type inputModel struct {
+	textInput textinput.Model
 	err       error
 	prompt    string
 	Selected  bool
-	InputType string
+	inputType string
 }
 
-func InitialInputModel(prompt string, inputType string) InputModel {
+func initialInputModel(prompt string, inputType string) inputModel {
 	ti := textinput.New()
 	// ti.Placeholder = prompt
 	ti.Focus()
 	ti.CharLimit = 156
 	ti.Width = 20
 
-	return InputModel{
-		TextInput: ti,
+	return inputModel{
+		textInput: ti,
 		err:       nil,
 		prompt:    prompt,
 		Selected:  false,
-		InputType: inputType,
+		inputType: inputType,
 	}
 }
 
-func InputUpdate(m InputModel, msg tea.Msg) (InputModel, tea.Cmd) {
+func inputUpdate(m inputModel, msg tea.Msg) (inputModel, tea.Cmd) {
 	var cmd tea.Cmd
 
 	switch msg := msg.(type) {
@@ -49,10 +49,10 @@ func InputUpdate(m InputModel, msg tea.Msg) (InputModel, tea.Cmd) {
 			}
 			m.Selected = true
 
-			return m, tea.Sequence(cmd, func() tea.Msg { return InputFinishedMsg(true) })
+			return m, tea.Sequence(cmd, func() tea.Msg { return inputFinishedMsg(true) })
 
 		case tea.KeyCtrlC, tea.KeyEsc:
-			return m, tea.Sequence(cmd, func() tea.Msg { return InputRejectedMsg(true) })
+			return m, tea.Sequence(cmd, func() tea.Msg { return inputRejectedMsg(true) })
 		}
 
 	// We handle errors just like any other message
@@ -61,15 +61,15 @@ func InputUpdate(m InputModel, msg tea.Msg) (InputModel, tea.Cmd) {
 		return m, nil
 	}
 
-	m.TextInput, cmd = m.TextInput.Update(msg)
+	m.textInput, cmd = m.textInput.Update(msg)
 	return m, cmd
 
 }
 
-func InputView(m InputModel) string {
+func inputView(m inputModel) string {
 	return fmt.Sprintf(
 		m.prompt+"\n\n%s\n\n%s",
-		m.TextInput.View(),
+		m.textInput.View(),
 		"(esc to quit)",
 	) + "\n"
 }

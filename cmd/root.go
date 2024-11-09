@@ -5,11 +5,10 @@ package cmd
 
 import (
 	"fmt"
-	"launcher/tui/list"
-	"os"
-
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"launcher/tui"
+	"os"
 )
 
 var cfgFile string
@@ -26,8 +25,7 @@ var rootCmd = &cobra.Command{
 		// for flag := range flags {
 		//
 		// }
-		tui_list.Main(path)
-
+		tui.Main(path)
 	},
 }
 
