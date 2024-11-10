@@ -22,7 +22,7 @@ type model struct {
 }
 
 func (m model) Init() tea.Cmd {
-	return nil
+	return func() tea.Msg { return generateSelectedItemViewMsg(true) }
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -81,10 +81,13 @@ func Main(path string) {
 	m := model{
 		currentPath: path,
 		currentView: "list",
+		chain:       backend.ReadChainConfig(),
 		stdout:      backend.ReadStdin(),
 		list:        createList(path),
 	}
+	// fmt.Printf("Loaded chain: %+v\n", m.chain)
 
+	// backend.SaveChain(m.chain)
 
 	p := tea.NewProgram(m, tea.WithAltScreen())
 
