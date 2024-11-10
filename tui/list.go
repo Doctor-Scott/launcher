@@ -140,11 +140,10 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 			// run chain
 			stdout := backend.RunChain(m.stdout, m.chain)
 			m.stdout = stdout
-			cmd = func() tea.Msg {
-				return tea.ClearScreen()
-			}
 
-			m.chain = []backend.Script{}
+			if C.CLEAR_CHAIN_AFTER_RUN {
+				m.chain = []backend.Script{}
+			}
 
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 

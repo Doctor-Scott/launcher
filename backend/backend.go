@@ -164,7 +164,9 @@ func PrintStructure(path string) {
 
 func RunChain(stdin []byte, chain []Script) []byte {
 	if len(chain) == 0 {
-		SaveChain(chain)
+		if C.CLEAR_CHAIN_AFTER_RUN {
+			SaveChain(chain)
+		}
 		return stdin
 	}
 	stdout := RunScript(chain[0], stdin)
