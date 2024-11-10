@@ -41,8 +41,8 @@ func getCustomDelegate() list.DefaultDelegate {
 	return delegate
 }
 
-func createNewModelList(m model) model {
-	structure := backend.GetStructure(m.currentPath)
+func createList(path string) list.Model {
+	structure := backend.GetStructure(path)
 	items := []list.Item{}
 
 	items = append(items, item{title: "Input", desc: C.INPUT_SCRIPT_DESC, script: backend.Script{Name: C.INPUT_SCRIPT_NAME}})
@@ -50,7 +50,12 @@ func createNewModelList(m model) model {
 		items = append(items, item{title: script.Name, script: script})
 	}
 	delegate := getCustomDelegate()
-	m.list = list.New(items, delegate, 0, 0)
-	m.list.Title = "Running a script are we???"
+	list := list.New(items, delegate, 0, 0)
+	list.Title = "Running a script are we???"
+	return list
+}
+
+func createNewModelList(m model) model {
+	m.list = createList(m.currentPath)
 	return m
 }
