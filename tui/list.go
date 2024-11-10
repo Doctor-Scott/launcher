@@ -3,14 +3,11 @@ package tui
 import (
 	"bytes"
 	"fmt"
-	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 	backend "launcher/backend"
 	C "launcher/globalConstants"
 	"os"
 	"os/exec"
-	"strconv"
 )
 
 type item struct {
@@ -27,124 +24,6 @@ type vimFinishedMsg []byte
 type updateStructureMsg bool
 type generateSelectedItemViewMsg bool
 
-const USE_AND_IN_DESC bool = false
-
-func getCustomDelegate() list.DefaultDelegate {
-	delegate := list.NewDefaultDelegate()
-	delegate.UpdateFunc = func(msg tea.Msg, m *list.Model) tea.Cmd {
-		// make each selected item a different color
-		for i, listItem := range m.Items() {
-			item := listItem.(item)
-
-			if item.script.Selected == true {
-				item.titlePretty = lipgloss.NewStyle().Foreground(lipgloss.Color("#6fe600")).Render(item.title)
-				m.SetItem(i, item)
-			} else {
-				item.titlePretty = lipgloss.NewStyle().Foreground(lipgloss.NoColor{}).Render(item.title)
-				m.SetItem(i, item)
-			}
-		}
-
-		return nil
-	}
-	c := lipgloss.Color("#6fe6fc")
-	delegate.Styles.SelectedTitle = delegate.Styles.SelectedTitle.Foreground(c).BorderLeftForeground(c)
-	delegate.Styles.SelectedDesc = delegate.Styles.SelectedTitle // reuse the title style here
-	return delegate
-}
-
-func updateModelList(m model) model {
-	structure := backend.GetStructure(m.currentPath)
-	items := []list.Item{}
-
-	items = append(items, item{title: "Input", desc: "Enter a script"})
-	for _, script := range structure {
-		items = append(items, item{title: script.Name, script: script})
-	}
-	delegate := getCustomDelegate()
-	m.list = list.New(items, delegate, 0, 0)
-	m.list.Title = "Running a script are we???"
-	return m
-}
-
-func emptySelected(m model) model {
-	for i, listItem := range m.list.Items() {
-		if item, ok := listItem.(item); ok {
-			item.script.Selected = false
-			if item.title != "Input" {
-				item.desc = ""
-			}
-			m.list.SetItem(i, item)
-		}
-	}
-	return m
-}
-
-func findScriptIndexes(chain []backend.Script, script backend.Script) []int {
-	indexes := []int{}
-	for i, chainScript := range chain {
-		if chainScript.Name == script.Name {
-			indexes = append(indexes, i)
-		}
-	}
-	return indexes
-}
-
-func generatePositionString(indexes []int, chainLength int) string {
-	desc := "Position: " + strconv.Itoa(indexes[0]+1)
-	if len(indexes) != 1 {
-
-		for i, index := range indexes {
-			if i == 0 {
-				continue
-			}
-			if USE_AND_IN_DESC {
-				if i != len(indexes)-1 {
-					desc += ", "
-				} else {
-					desc += " and "
-				}
-			} else {
-				desc += ", "
-			}
-
-			desc += strconv.Itoa(index + 1)
-		}
-	}
-	desc += " of " + strconv.Itoa(chainLength)
-	return desc
-
-}
-
-func generateSelectedItemView(m model) model {
-	if len(m.chain) == 0 {
-		return emptySelected(m)
-	}
-	for i, listItem := range m.list.Items() {
-		if item, ok := listItem.(item); ok {
-			for _, chainScript := range m.chain {
-				if item.script.Name == chainScript.Name {
-					item.script.Selected = true
-					indexes := findScriptIndexes(m.chain, item.script)
-					desc := generatePositionString(indexes, len(m.chain))
-					item.desc = desc
-
-					m.list.SetItem(i, item)
-					break
-				} else {
-					item.script.Selected = false
-					if item.title != "Input" {
-						item.desc = ""
-					}
-					m.list.SetItem(i, item)
-				}
-			}
-		}
-	}
-
-	return m
-}
-
 func debug(m model) model {
 	// fmt.Println(m.currentPath)
 	// fmt.Println("")
@@ -160,18 +39,11 @@ func debug(m model) model {
 	return m
 }
 
-func addArgsToScript(m model, scriptArgs string) model {
-	script := m.list.SelectedItem().(item).script
-	script.Args = append(script.Args, scriptArgs)
-	m.list.SetItem(m.list.Index(), item{title: script.Name, script: script})
-	return m
-}
-
 func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case updateStructureMsg:
-		m = updateModelList(m)
+		m = createNewModelList(m)
 		return m, tea.WindowSize()
 	case generateSelectedItemViewMsg:
 		m = generateSelectedItemView(m)
@@ -228,7 +100,9 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 				m.currentView = "input"
 				return m, nil
 			} else {
-				m.chain = backend.AddScriptToChain(m.list.SelectedItem().(item).script, m.chain)
+				script := m.list.SelectedItem().(item).script
+				script.Selected = true
+				m.chain = backend.AddScriptToChain(script, m.chain)
 				return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 			}
 
@@ -250,8 +124,9 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		}
 		if msg.String() == "S" {
 			//save chain
-			// TODO
-			// might be fun to allow people to share these chains once created
+			// TODO  might be fun to allow people to share these chains once created
+
+			//TODO  Add this to the config
 		}
 
 		if msg.String() == "r" {
@@ -313,6 +188,11 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 				}
 				return vimFinishedMsg(outBuf.Bytes())
 			})
+		}
+		if msg.String() == "W" {
+			//write chain
+			backend.SaveChain(m.chain)
+			return m, nil
 		}
 
 		// if msg.String() == "x" {

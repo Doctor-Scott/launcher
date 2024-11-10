@@ -21,39 +21,38 @@ type model struct {
 	inputModel  inputModel
 }
 
+func addArgsToSelectedScript(m model, scriptArgs string) backend.Script {
+	return backend.AddArgsToScript(m.list.SelectedItem().(item).script, scriptArgs)
+}
+
 func (m model) Init() tea.Cmd {
 	return nil
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-
 	switch msg.(type) {
 	case inputFinishedMsg:
 		switch m.inputModel.returnCommand {
 		case C.RUN_SCRIPT:
 			command := m.inputModel.textInput.Value()
 			if command != "" {
-				stdout := backend.RunKnownScript(command, m.stdout)
-				m.stdout = stdout
+				m.stdout = backend.RunKnownScript(command, m.stdout)
 			}
 		case C.ADD_ARGS_TO_SCRIPT_AND_RUN:
 			scriptArgs := m.inputModel.textInput.Value()
-			m = addArgsToScript(m, scriptArgs)
+			script := addArgsToSelectedScript(m, scriptArgs)
 
-			stdout := backend.RunScript(m.list.SelectedItem().(item).script, m.stdout)
-			m.stdout = stdout
+			m.stdout = backend.RunScript(script, m.stdout)
 		case C.ADD_SCRIPT_TO_CHAIN:
 			command := m.inputModel.textInput.Value()
 			if command != "" {
-				scriptName, args := backend.GetScriptNameAndArgs(command)
-				script := backend.Script{Name: scriptName, Path: scriptName, Args: args}
+				script := backend.GetScriptFromCommand(command)
 				m.chain = backend.AddScriptToChain(script, m.chain)
 			}
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 		case C.ADD_ARGS_TO_SCRIPT_THEN_ADD_TO_CHAIN:
-			scriptArgs := m.inputModel.textInput.Value()
-			m = addArgsToScript(m, scriptArgs)
-			m.chain = backend.AddScriptToChain(m.list.SelectedItem().(item).script, m.chain)
+			script := addArgsToSelectedScript(m, m.inputModel.textInput.Value())
+			m.chain = backend.AddScriptToChain(script, m.chain)
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 		}
 
@@ -84,7 +83,7 @@ func Main(path string) {
 	var m model
 	m.currentPath = path
 	m.currentView = "list"
-	m = updateModelList(m)
+	m = createNewModelList(m)
 
 	m.stdout = backend.ReadStdin()
 

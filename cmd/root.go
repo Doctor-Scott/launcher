@@ -4,7 +4,7 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
+	// "fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"launcher/tui"
@@ -62,19 +62,22 @@ func initConfig() {
 	} else {
 		// Find home directory.
 		home, err := os.UserHomeDir()
-		fmt.Println("Home directory:", home)
+		// fmt.Println("Home directory:", home)
 		cobra.CheckErr(err)
 
 		// Search config in home directory with name ".launcher" (without extension).
 		viper.AddConfigPath(home + "/.config")
 		viper.SetConfigType("json")
 		viper.SetConfigName("launcher.json")
+
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
+	viper.Set("USE_AND_IN_DESC", false)
+	viper.WriteConfig()
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+		// fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
 	}
 }

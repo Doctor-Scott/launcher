@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"github.com/spf13/viper"
+	C "launcher/globalConstants"
 	"log"
 	"os"
 	"os/exec"
@@ -62,6 +64,7 @@ func ResolvePath(path string) string {
 	}
 	return path + "/"
 }
+
 func GetStructure(path string) []Script {
 	path = ResolvePath(path)
 
@@ -91,33 +94,27 @@ func RunScript(script Script, stdin []byte) []byte {
 }
 
 func RunKnownScript(command string, stdin []byte) []byte {
-	scriptName, args := GetScriptNameAndArgs(command)
-
-	cmd := exec.Command(scriptName, args...)
-
-	if len(stdin) > 0 {
-		stdinBuffer := bytes.NewBuffer(stdin)
-		cmd.Stdin = stdinBuffer
-	}
-
-	stdout, err := cmd.CombinedOutput()
-	saveStdout(stdout)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	return stdout
+	return RunScript(GetScriptFromCommand(command), stdin)
 }
 
-func GetScriptNameAndArgs(command string) (string, []string) {
-	splitCommand := strings.Split(command, " ")
+func GetScriptFromCommand(command string) Script {
+	scriptName, argsString, found := strings.Cut(command, " ")
+	name := C.INPUT_SCRIPT_NAME
 
-	scriptName := splitCommand[0]
-	args := splitCommand[1:]
+	if found && len(argsString) != 0 {
+		return Script{Name: name, Path: scriptName, Args: resolveArgsString(argsString)}
+	}
+	// command with no args
+	return Script{Name: name, Path: scriptName, Args: []string{}}
+}
 
+func resolveArgsString(argsString string) []string {
+	args := strings.Split(argsString, " ")
 	//rejoin quoted args and expand environment variables
 	for i, arg := range args {
+		// BUG  I think this needs to be adjusted
+		// a string with spaces in the quotes would not work here I dont think
+		//TODO  good oppertunity for a test
 		if strings.HasPrefix(arg, "\"") && strings.HasSuffix(arg, "\"") {
 			args[i] = strings.Trim(arg, "\"")
 		}
@@ -126,8 +123,14 @@ func GetScriptNameAndArgs(command string) (string, []string) {
 		}
 		args[i] = os.ExpandEnv(arg)
 	}
+	return args
+}
 
-	return scriptName, args
+func AddArgsToScript(script Script, argsString string) Script {
+	args := resolveArgsString(argsString)
+	script.Args = append(script.Args, args...)
+	// script.Args = append(script.Args, scriptArgs)
+	return script
 }
 
 func saveStdout(stdout []byte) {
@@ -159,32 +162,37 @@ func PrintStructure(path string) {
 	}
 }
 
-func removeScript(slice []Script, s int) []Script {
-	return append(slice[:s], slice[s+1:]...)
-}
-
-func RunChain(stdin []byte, scripts []Script) []byte {
-	if len(scripts) == 0 {
+func RunChain(stdin []byte, chain []Script) []byte {
+	if len(chain) == 0 {
+		SaveChain(chain)
 		return stdin
 	}
-	stdout := RunScript(scripts[0], stdin)
-	return RunChain(stdout, removeScript(scripts, 0))
+	stdout := RunScript(chain[0], stdin)
+	return RunChain(stdout, chain[1:])
 
 }
 
-func AddScriptToChain(scriptToAdd Script, scripts []Script) []Script {
-	scripts = append(scripts, scriptToAdd)
-	return scripts
-
+func AddScriptToChain(scriptToAdd Script, chain []Script) []Script {
+	return SaveChain(append(chain, scriptToAdd))
 }
 
-func RemoveScriptFromChain(scriptToRemove Script, scripts []Script) []Script {
-	for i, script := range scripts {
-		if script.Name == scriptToRemove.Name && script.Path == scriptToRemove.Path {
-			return append(scripts[:i], scripts[i+1:]...)
+func RemoveScriptFromChain(scriptToRemove Script, chain []Script) []Script {
+	for i := len(chain) - 1; i >= 0; i-- {
+		shouldRemoveScript := chain[i].Name == scriptToRemove.Name && chain[i].Path == scriptToRemove.Path
+		shouldRemoveInput := chain[i].Name == C.INPUT_SCRIPT_NAME && scriptToRemove.Name == C.INPUT_SCRIPT_NAME
+		if shouldRemoveScript || shouldRemoveInput {
+			//pop the item
+			return SaveChain(append(chain[0:i], chain[i+1:]...))
 		}
 	}
-	return scripts
+	// item not found in chain, so just return the chain
+	return SaveChain(chain)
+}
+
+func SaveChain(chain []Script) []Script {
+	viper.Set("chain", chain)
+	viper.WriteConfig()
+	return chain
 }
 
 func runScriptWithStdin(stdin []byte, script Script) []byte {
