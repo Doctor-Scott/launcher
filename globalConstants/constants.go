@@ -9,3 +9,6 @@ const ADD_ARGS_TO_SCRIPT_THEN_ADD_TO_CHAIN int = 3
 // List constants
 const INPUT_SCRIPT_NAME string = "userInput"
 const INPUT_SCRIPT_DESC string = "Enter a script"
+
+// Backend constants
+const CHAIN_SAVE_FILE string = ".launcher-autosave.json"

@@ -7,6 +7,8 @@ import (
 	// "fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"launcher/backend"
+	C "launcher/globalConstants"
 	"launcher/tui"
 	"os"
 )
@@ -72,10 +74,12 @@ func initConfig() {
 		viper.SetConfigName("launcher.json")
 
 	}
+	if !C.AUTO_SAVE {
+		backend.SaveChain([]backend.Script{})
+	}
 
 	viper.ReadInConfig()
 	viper.AutomaticEnv() // read in environment variables that match
-	viper.Set("USE_AND_IN_DESC", false)
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {

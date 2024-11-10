@@ -3,15 +3,19 @@ package backend
 import (
 	"bufio"
 	"bytes"
+	"encoding/json"
 	"fmt"
-	"github.com/spf13/viper"
+	"io"
 	C "launcher/globalConstants"
 	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"sync"
 )
+
+var lock sync.Mutex
 
 func ReadStdin() []byte {
 	var stdin = []byte{}
@@ -55,6 +59,9 @@ type Script struct {
 func ResolvePath(path string) string {
 	if path == "" {
 		return os.Getenv("DEFAULT_SCRIPT_PATH")
+	}
+	if path == "~" {
+		path = os.Getenv("HOME")
 	}
 
 	var err error
@@ -164,7 +171,7 @@ func PrintStructure(path string) {
 
 func RunChain(stdin []byte, chain []Script) []byte {
 	if len(chain) == 0 {
-		if C.CLEAR_CHAIN_AFTER_RUN {
+		if C.CLEAR_CHAIN_AFTER_RUN && C.AUTO_SAVE {
 			SaveChain(chain)
 		}
 		return stdin
@@ -175,7 +182,10 @@ func RunChain(stdin []byte, chain []Script) []byte {
 }
 
 func AddScriptToChain(scriptToAdd Script, chain []Script) []Script {
-	return SaveChain(append(chain, scriptToAdd))
+	if C.AUTO_SAVE {
+		return SaveChain(append(chain, scriptToAdd))
+	}
+	return append(chain, scriptToAdd)
 }
 
 func RemoveScriptFromChain(scriptToRemove Script, chain []Script) []Script {
@@ -184,57 +194,81 @@ func RemoveScriptFromChain(scriptToRemove Script, chain []Script) []Script {
 		shouldRemoveInput := chain[i].Name == C.INPUT_SCRIPT_NAME && scriptToRemove.Name == C.INPUT_SCRIPT_NAME
 		if shouldRemoveScript || shouldRemoveInput {
 			//pop the item
-			return SaveChain(append(chain[0:i], chain[i+1:]...))
+			if C.AUTO_SAVE {
+				return SaveChain(append(chain[0:i], chain[i+1:]...))
+			}
+			return append(chain[0:i], chain[i+1:]...)
 		}
 	}
 	// item not found in chain, so just return the chain
-	return SaveChain(chain)
-}
-
-func SaveChain(chain []Script) []Script {
-	viper.Set("chain", chain)
-	viper.WriteConfig()
+	if C.AUTO_SAVE {
+		return SaveChain(chain)
+	}
 	return chain
 }
 
-func makeScriptFromItem(item interface{}) Script {
-	var script Script
-	if scriptMap, ok := item.(map[string]interface{}); ok {
-		// Handle Args as a slice of strings
-		args := []string{}
-		if argsInterface, exists := scriptMap["args"]; exists && argsInterface != nil {
-			if argsSlice, ok := argsInterface.([]interface{}); ok {
-				for _, arg := range argsSlice {
-					args = append(args, arg.(string))
-				}
-			}
-		}
-
-		script = Script{
-			Path:     scriptMap["path"].(string),
-			Name:     scriptMap["name"].(string),
-			Args:     args,
-			Selected: true,
-		}
+func SaveChain(chain []Script) []Script {
+	err := Save(ResolvePath("~")+"/"+C.CHAIN_SAVE_FILE, chain)
+	if err != nil {
+		log.Fatal(err)
 	}
-	return script
+	return chain
+}
+
+// Marshal is a function that marshals the object into an
+// io.Reader.
+// By default, it uses the JSON marshaller.
+var Marshal = func(v interface{}) (io.Reader, error) {
+	b, err := json.MarshalIndent(v, "", "\t")
+	if err != nil {
+		return nil, err
+	}
+	return bytes.NewReader(b), nil
+}
+
+// Save saves a representation of v to the file at path.
+func Save(path string, v interface{}) error {
+	lock.Lock()
+	defer lock.Unlock()
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	r, err := Marshal(v)
+	if err != nil {
+		return err
+	}
+	_, err = io.Copy(f, r)
+	return err
+}
+
+// Unmarshal is a function that unmarshals the data from the
+// reader into the specified value.
+// By default, it uses the JSON unmarshaller.
+var Unmarshal = func(r io.Reader, v interface{}) error {
+	return json.NewDecoder(r).Decode(v)
+}
+
+// Load loads the file at path into v.
+// Use os.IsNotExist() to see if the returned error is due
+// to the file being missing.
+func Load(path string, v interface{}) error {
+	lock.Lock()
+	defer lock.Unlock()
+	f, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	return Unmarshal(f, v)
 }
 
 func ReadChainConfig() []Script {
 	// Safely handle chain configuration
-	if chain := viper.Get("chain"); chain != nil {
-		// Convert the interface{} slice to []backend.Script
-		if chainSlice, ok := chain.([]interface{}); ok {
-
-			scripts := make([]Script, 0, len(chainSlice))
-			for _, item := range chainSlice {
-				scripts = append(scripts, makeScriptFromItem(item))
-			}
-			return scripts
-		}
-	}
-	return []Script{}
-
+	var chainConfig []Script
+	Load(ResolvePath("~")+"/"+C.CHAIN_SAVE_FILE, &chainConfig)
+	return chainConfig
 }
 
 func main() {
