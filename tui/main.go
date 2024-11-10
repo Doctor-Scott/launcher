@@ -78,12 +78,13 @@ func (m model) View() string {
 func Main(path string) {
 	path = backend.ResolvePath(path)
 
-	var m model
-	m.currentPath = path
-	m.currentView = "list"
-	m = createNewModelList(m)
+	m := model{
+		currentPath: path,
+		currentView: "list",
+		stdout:      backend.ReadStdin(),
+		list:        createList(path),
+	}
 
-	m.stdout = backend.ReadStdin()
 
 	p := tea.NewProgram(m, tea.WithAltScreen())
 
