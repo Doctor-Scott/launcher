@@ -16,7 +16,7 @@ type model struct {
 	list        list.Model
 	stdout      []byte
 	currentPath string
-	chain       []backend.Script
+	chain       backend.Chain
 	currentView string
 	inputModel  inputModel
 }

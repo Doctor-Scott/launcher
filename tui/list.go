@@ -86,7 +86,7 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		}
 		if msg.String() == "c" {
 			// clear state
-			m.chain = []backend.Script{}
+			m.chain = backend.Chain{}
 			m.stdout = []byte{}
 			m = generateSelectedItemView(m)
 			return m, func() tea.Msg { return updateStructureMsg(true) }
@@ -143,7 +143,7 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 			m.stdout = stdout
 
 			if C.CLEAR_CHAIN_AFTER_RUN {
-				m.chain = []backend.Script{}
+				m.chain = backend.Chain{}
 			}
 
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }

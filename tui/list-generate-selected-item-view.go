@@ -54,7 +54,7 @@ func deselectAllItems(m model) model {
 	return m
 }
 
-func findScriptIndexes(chain []backend.Script, script backend.Script) []int {
+func findScriptIndexes(chain backend.Chain, script backend.Script) []int {
 	indexes := []int{}
 	for i, chainScript := range chain {
 		if chainScript.Name == script.Name {
