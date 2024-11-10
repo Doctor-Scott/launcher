@@ -195,14 +195,43 @@ func SaveChain(chain []Script) []Script {
 	return chain
 }
 
-func runScriptWithStdin(stdin []byte, script Script) []byte {
-	cmd := exec.Command(script.Path)
-	cmd.Stdin.Read(stdin)
-	stdout, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Print(err)
+func makeScriptFromItem(item interface{}) Script {
+	var script Script
+	if scriptMap, ok := item.(map[string]interface{}); ok {
+		// Handle Args as a slice of strings
+		args := []string{}
+		if argsInterface, exists := scriptMap["args"]; exists && argsInterface != nil {
+			if argsSlice, ok := argsInterface.([]interface{}); ok {
+				for _, arg := range argsSlice {
+					args = append(args, arg.(string))
+				}
+			}
+		}
+
+		script = Script{
+			Path:     scriptMap["path"].(string),
+			Name:     scriptMap["name"].(string),
+			Args:     args,
+			Selected: true,
+		}
 	}
-	return stdout
+	return script
+}
+
+func ReadChainConfig() []Script {
+	// Safely handle chain configuration
+	if chain := viper.Get("chain"); chain != nil {
+		// Convert the interface{} slice to []backend.Script
+		if chainSlice, ok := chain.([]interface{}); ok {
+
+			scripts := make([]Script, 0, len(chainSlice))
+			for _, item := range chainSlice {
+				scripts = append(scripts, makeScriptFromItem(item))
+			}
+			return scripts
+		}
+	}
+	return []Script{}
 
 }
 

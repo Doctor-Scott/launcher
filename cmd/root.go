@@ -25,6 +25,7 @@ var rootCmd = &cobra.Command{
 		// for flag := range flags {
 		//
 		// }
+
 		tui.Main(path)
 	},
 }
@@ -72,9 +73,9 @@ func initConfig() {
 
 	}
 
+	viper.ReadInConfig()
 	viper.AutomaticEnv() // read in environment variables that match
 	viper.Set("USE_AND_IN_DESC", false)
-	viper.WriteConfig()
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
