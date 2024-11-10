@@ -53,6 +53,21 @@ func SaveChain(chain Chain) Chain {
 	return chain
 }
 
+func SaveCustomChain(chain Chain, name string) Chain {
+	err := Save(ResolvePath("~")+".launcher/"+name+".json", chain)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return chain
+
+}
+
+func LoadCustomChain(name string) Chain {
+	var chain Chain
+	Load(ResolvePath("~")+".launcher/"+name+".json", &chain)
+	return chain
+}
+
 func ReadChainConfig() []Script {
 	// Safely handle chain configuration
 	var chainConfig []Script

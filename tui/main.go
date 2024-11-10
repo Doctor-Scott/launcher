@@ -52,6 +52,15 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			script.Selected = true
 			m.chain = backend.AddScriptToChain(script, m.chain)
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
+		case C.SAVE_CUSTOM_CHAIN:
+			name := m.inputModel.textInput.Value()
+			backend.SaveCustomChain(m.chain, name)
+			return m, nil
+
+		case C.LOAD_CUSTOM_CHAIN:
+			name := m.inputModel.textInput.Value()
+			m.chain = backend.LoadCustomChain(name)
+			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 		}
 
 	case inputRejectedMsg:
@@ -95,6 +104,9 @@ func Main(path string) {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)
 	}
+	// for true {
+	// }
+	// os.Exit(1)
 }
 
 func main() {

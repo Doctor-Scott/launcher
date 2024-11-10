@@ -8,6 +8,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 	"sync"
 )
 
@@ -71,6 +72,10 @@ var Marshal = func(v interface{}) (io.Reader, error) {
 func Save(path string, v interface{}) error {
 	lock.Lock()
 	defer lock.Unlock()
+	// Create all necessary parent directories
+	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+		return err
+	}
 	f, err := os.Create(path)
 	if err != nil {
 		return err

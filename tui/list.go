@@ -125,12 +125,6 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 
 		}
-		if msg.String() == "S" {
-			//save chain
-			// TODO  might be fun to allow people to share these chains once created
-
-			//TODO  Add this to the config
-		}
 		if msg.String() == "r" {
 			// refresh view
 			m.list.ResetSelected()
@@ -190,10 +184,22 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 				return vimFinishedMsg(outBuf.Bytes())
 			})
 		}
+		if msg.String() == "L" {
+			//load chain
+			m.inputModel = initialInputModel("Name:", C.LOAD_CUSTOM_CHAIN)
+			m.currentView = "input"
+			return m, nil
+
+		}
+
 		if msg.String() == "W" {
 			//write chain
-			backend.SaveChain(m.chain)
+			// TODO  might be fun to allow people to share these chains once created
+
+			m.inputModel = initialInputModel("Name:", C.SAVE_CUSTOM_CHAIN)
+			m.currentView = "input"
 			return m, nil
+
 		}
 
 		// if msg.String() == "x" {
