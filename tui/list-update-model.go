@@ -57,5 +57,6 @@ func createList(path string) list.Model {
 
 func createNewModelList(m model) model {
 	m.list = createList(m.currentPath)
+	// backend.SaveChain(m.chain)
 	return m
 }
