@@ -71,7 +71,7 @@ func GetStructure(path string) []Script {
 	files := getFiles(path)
 	scripts := []Script{}
 	for _, file := range files {
-		scripts = append(scripts, Script{Name: file, Path: path + file})
+		scripts = append(scripts, Script{Name: file, Path: path + file, Args: []string{}, Selected: false})
 	}
 	return scripts
 }
