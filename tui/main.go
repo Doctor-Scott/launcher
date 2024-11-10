@@ -21,10 +21,6 @@ type model struct {
 	inputModel  inputModel
 }
 
-func addArgsToSelectedScript(m model, scriptArgs string) backend.Script {
-	return backend.AddArgsToScript(m.list.SelectedItem().(item).script, scriptArgs)
-}
-
 func (m model) Init() tea.Cmd {
 	return nil
 }
@@ -40,7 +36,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case C.ADD_ARGS_TO_SCRIPT_AND_RUN:
 			scriptArgs := m.inputModel.textInput.Value()
-			script := addArgsToSelectedScript(m, scriptArgs)
+			script := backend.AddArgsToScript(m.list.SelectedItem().(item).script, scriptArgs)
 
 			m.stdout = backend.RunScript(script, m.stdout)
 		case C.ADD_SCRIPT_TO_CHAIN:
@@ -51,7 +47,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 		case C.ADD_ARGS_TO_SCRIPT_THEN_ADD_TO_CHAIN:
-			script := addArgsToSelectedScript(m, m.inputModel.textInput.Value())
+			script := backend.AddArgsToScript(m.list.SelectedItem().(item).script, m.inputModel.textInput.Value())
 			m.chain = backend.AddScriptToChain(script, m.chain)
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 		}
