@@ -84,7 +84,7 @@ func (m model) View() string {
 	return inputView(m.inputModel)
 }
 
-func Main(path string) {
+func Start(path string) {
 	path = backend.ResolvePath(path)
 
 	m := model{
@@ -104,11 +104,4 @@ func Main(path string) {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)
 	}
-	// for true {
-	// }
-	// os.Exit(1)
-}
-
-func main() {
-	Main("")
 }

@@ -28,7 +28,7 @@ var rootCmd = &cobra.Command{
 		//
 		// }
 
-		tui.Main(path)
+		tui.Start(path)
 	},
 }
 
