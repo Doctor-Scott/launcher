@@ -57,7 +57,7 @@ func ClearAutoSave() Chain {
 }
 
 func SaveCustomChain(chain Chain, name string) Chain {
-	err := Save(ResolvePath("~")+".launcher/"+name+".json", chain)
+	err := Save(ResolvePath("~")+".launcher/custom/"+name+".json", chain)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -67,7 +67,7 @@ func SaveCustomChain(chain Chain, name string) Chain {
 
 func LoadCustomChain(name string) Chain {
 	var chain Chain
-	Load(ResolvePath("~")+".launcher/"+name+".json", &chain)
+	Load(ResolvePath("~")+".launcher/custom/"+name+".json", &chain)
 	return chain
 }
 
