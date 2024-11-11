@@ -15,7 +15,7 @@ func getCustomDelegate() list.DefaultDelegate {
 		for i, listItem := range m.Items() {
 			item := listItem.(item)
 
-			if item.script.Selected == true {
+			if item.selected == true {
 				// TODO  Add this to the config
 				// or maybe from the terminal colour scheme?
 				item.titlePretty = lipgloss.NewStyle().Foreground(lipgloss.Color("#6fe600")).Render(item.title)

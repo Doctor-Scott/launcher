@@ -13,6 +13,7 @@ import (
 type item struct {
 	title, titlePretty, desc string
 	script                   backend.Script
+	selected                 bool
 	focused                  bool
 }
 
@@ -102,7 +103,6 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 				return m, nil
 			} else {
 				script := m.list.SelectedItem().(item).script
-				script.Selected = true
 				m.chain = backend.AddScriptToChain(script, m.chain)
 				return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 			}

@@ -43,13 +43,11 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			command := m.inputModel.textInput.Value()
 			if command != "" {
 				script := backend.GetScriptFromCommand(command)
-				script.Selected = true
 				m.chain = backend.AddScriptToChain(script, m.chain)
 			}
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 		case C.ADD_ARGS_TO_SCRIPT_THEN_ADD_TO_CHAIN:
 			script := backend.AddArgsToScript(m.list.SelectedItem().(item).script, m.inputModel.textInput.Value())
-			script.Selected = true
 			m.chain = backend.AddScriptToChain(script, m.chain)
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 		case C.SAVE_CUSTOM_CHAIN:

@@ -27,7 +27,7 @@ func generateSelectedItemView(m model) model {
 }
 
 func selectItem(m model, item item) item {
-	item.script.Selected = true
+	item.selected = true
 	indexes := findScriptIndexes(m.chain, item.script)
 	desc := generatePositionString(indexes, len(m.chain))
 	item.desc = desc
@@ -35,7 +35,7 @@ func selectItem(m model, item item) item {
 }
 
 func deselectItem(item item) item {
-	item.script.Selected = false
+	item.selected = false
 	if item.title != "Input" {
 		item.desc = ""
 	} else {
