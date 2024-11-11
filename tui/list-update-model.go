@@ -51,7 +51,7 @@ func createList(path string) list.Model {
 	}
 	delegate := getCustomDelegate()
 	list := list.New(items, delegate, 0, 0)
-	list.Title = "Running a script are we???"
+	list.Title = "Script Launcher"
 	return list
 }
 
