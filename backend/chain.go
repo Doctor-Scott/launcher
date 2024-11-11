@@ -9,8 +9,8 @@ type Chain []Script
 
 func RunChain(stdin []byte, chain Chain) []byte {
 	if len(chain) == 0 {
-		if C.CLEAR_CHAIN_AFTER_RUN && C.AUTO_SAVE {
-			SaveChain(chain)
+		if C.CLEAR_CHAIN_AFTER_RUN {
+			MaybeAutoSaveChain(chain)
 		}
 		return stdin
 	}
@@ -20,10 +20,7 @@ func RunChain(stdin []byte, chain Chain) []byte {
 }
 
 func AddScriptToChain(scriptToAdd Script, chain Chain) Chain {
-	if C.AUTO_SAVE {
-		return SaveChain(append(chain, scriptToAdd))
-	}
-	return append(chain, scriptToAdd)
+	return MaybeAutoSaveChain(append(chain, scriptToAdd))
 }
 
 func RemoveScriptFromChain(scriptToRemove Script, chain Chain) Chain {
@@ -32,20 +29,26 @@ func RemoveScriptFromChain(scriptToRemove Script, chain Chain) Chain {
 		shouldRemoveInput := chain[i].Name == C.INPUT_SCRIPT_NAME && scriptToRemove.Name == C.INPUT_SCRIPT_NAME
 		if shouldRemoveScript || shouldRemoveInput {
 			//pop the item
-			if C.AUTO_SAVE {
-				return SaveChain(append(chain[0:i], chain[i+1:]...))
-			}
-			return append(chain[0:i], chain[i+1:]...)
+			return MaybeAutoSaveChain(append(chain[0:i], chain[i+1:]...))
 		}
 	}
 	// item not found in chain, so just return the chain
+	return MaybeAutoSaveChain(chain)
+}
+
+func MaybeAutoSaveChain(chain Chain) Chain {
 	if C.AUTO_SAVE {
-		return SaveChain(chain)
+		err := Save(ResolvePath("~")+"/"+C.CHAIN_SAVE_FILE, chain)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 	return chain
 }
 
-func SaveChain(chain Chain) Chain {
+func ClearAutoSave() Chain {
+	chain := Chain{}
+
 	err := Save(ResolvePath("~")+"/"+C.CHAIN_SAVE_FILE, chain)
 	if err != nil {
 		log.Fatal(err)

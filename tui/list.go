@@ -44,9 +44,7 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case updateStructureMsg:
 		m = createNewModelList(m)
-		if C.AUTO_SAVE {
-			backend.SaveChain(m.chain)
-		}
+		backend.MaybeAutoSaveChain(m.chain)
 		return m, tea.WindowSize()
 	case generateSelectedItemViewMsg:
 		m = generateSelectedItemView(m)

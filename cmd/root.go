@@ -75,7 +75,7 @@ func initConfig() {
 
 	}
 	if !C.AUTO_SAVE {
-		backend.SaveChain(backend.Chain{})
+		backend.ClearAutoSave()
 	}
 
 	viper.ReadInConfig()

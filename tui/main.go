@@ -60,6 +60,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case C.LOAD_CUSTOM_CHAIN:
 			name := m.inputModel.textInput.Value()
 			m.chain = backend.LoadCustomChain(name)
+			backend.MaybeAutoSaveChain(m.chain)
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 		}
 
