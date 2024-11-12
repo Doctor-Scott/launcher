@@ -93,6 +93,11 @@ func editItemUnderCursor(m model, itemType string) (tea.Model, tea.Cmd) {
 
 }
 
+func deleteChainUnderCursor(m model) (tea.Model, tea.Cmd) {
+	backend.DeleteChainConfig(m.list.SelectedItem().(item).chainItem.Name)
+	return m, func() tea.Msg { return updateStructureMsg(true) }
+}
+
 func openNvimInLauncherDirectory(m model) (tea.Model, tea.Cmd) {
 	cmd := exec.Command("nvim", "--cmd", "cd"+m.currentPath+" | enew")
 	m.list.ResetSelected()

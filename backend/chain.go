@@ -58,6 +58,15 @@ func RemoveScriptFromChain(scriptToRemove Script, chain Chain) Chain {
 	return MaybeAutoSaveChain(chain)
 }
 
+func DeleteChainConfig(name string) {
+	path := ResolvePath("~") + ".launcher/custom/" + name + ".json"
+	err := DeleteFile(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+}
+
 func MaybeAutoSaveChain(chain Chain) Chain {
 	if C.AUTO_SAVE {
 		err := Save(ResolvePath("~")+"/"+C.CHAIN_SAVE_FILE, chain)

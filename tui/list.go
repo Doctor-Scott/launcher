@@ -53,6 +53,10 @@ func chainsUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == "d" {
 			return debug(m)
 		}
+		if msg.String() == "D" {
+			return deleteChainUnderCursor(m)
+		}
+
 		if msg.String() == "e" {
 			return editItemUnderCursor(m, "chain")
 		}

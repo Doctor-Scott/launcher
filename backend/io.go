@@ -68,6 +68,10 @@ var Marshal = func(v interface{}) (io.Reader, error) {
 	return bytes.NewReader(b), nil
 }
 
+func DeleteFile(path string) error {
+	return os.Remove(path)
+}
+
 // Save saves a representation of v to the file at path.
 func Save(path string, v interface{}) error {
 	lock.Lock()
