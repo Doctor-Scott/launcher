@@ -10,9 +10,9 @@ import (
 )
 
 type Script struct {
-	Name string
-	Path string
-	Args []string
+	Name    string
+	Command string
+	Args    []string
 }
 
 func GetStructure(path string) []Script {
@@ -21,7 +21,7 @@ func GetStructure(path string) []Script {
 	files := getFiles(path)
 	scripts := []Script{}
 	for _, file := range files {
-		scripts = append(scripts, Script{Name: file, Path: path + file, Args: []string{}})
+		scripts = append(scripts, Script{Name: file, Command: path + file, Args: []string{}})
 	}
 	return scripts
 }
@@ -31,10 +31,10 @@ func GetScriptFromCommand(command string) Script {
 	name := C.INPUT_SCRIPT_NAME
 
 	if found && len(argsString) != 0 {
-		return Script{Name: name, Path: scriptName, Args: resolveArgsString(argsString)}
+		return Script{Name: name, Command: scriptName, Args: resolveArgsString(argsString)}
 	}
 	// command with no args
-	return Script{Name: name, Path: scriptName, Args: []string{}}
+	return Script{Name: name, Command: scriptName, Args: []string{}}
 }
 
 func resolveArgsString(argsString string) []string {
@@ -63,7 +63,7 @@ func AddArgsToScript(script Script, argsString string) Script {
 }
 
 func RunScript(script Script, stdin []byte) []byte {
-	cmd := exec.Command(script.Path, script.Args...)
+	cmd := exec.Command(script.Command, script.Args...)
 
 	if len(stdin) > 0 {
 		stdinBuffer := bytes.NewBuffer(stdin)

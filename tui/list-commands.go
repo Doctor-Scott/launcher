@@ -77,7 +77,7 @@ func editItemUnderCursor(m model, itemType string) (tea.Model, tea.Cmd) {
 		if itemType == "chain" {
 			pathToChain = backend.ResolvePath("~") + ".launcher/custom/" + m.list.SelectedItem().(item).chainItem.Name + ".json"
 		} else {
-			pathToChain = m.list.SelectedItem().(item).script.Path
+			pathToChain = m.list.SelectedItem().(item).script.Command
 		}
 
 		cmd := exec.Command("nvim", pathToChain)

@@ -47,7 +47,7 @@ func AddChainToChain(chainToAdd Chain, chain Chain) Chain {
 
 func RemoveScriptFromChain(scriptToRemove Script, chain Chain) Chain {
 	for i := len(chain) - 1; i >= 0; i-- {
-		shouldRemoveScript := chain[i].Name == scriptToRemove.Name && chain[i].Path == scriptToRemove.Path
+		shouldRemoveScript := chain[i].Name == scriptToRemove.Name && chain[i].Command == scriptToRemove.Command
 		shouldRemoveInput := chain[i].Name == C.INPUT_SCRIPT_NAME && scriptToRemove.Name == C.INPUT_SCRIPT_NAME
 		if shouldRemoveScript || shouldRemoveInput {
 			//pop the item
