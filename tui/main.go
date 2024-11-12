@@ -25,6 +25,12 @@ func (m model) Init() tea.Cmd {
 	return func() tea.Msg { return generateSelectedItemViewMsg(true) }
 }
 
+func loadCustomChain(m model, name string) (tea.Model, tea.Cmd) {
+	m.chain = backend.LoadCustomChain(name)
+	backend.MaybeAutoSaveChain(m.chain)
+	return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
+}
+
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg.(type) {
 	case inputFinishedMsg:
@@ -57,9 +63,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		case C.LOAD_CUSTOM_CHAIN:
 			name := m.inputModel.textInput.Value()
-			m.chain = backend.LoadCustomChain(name)
-			backend.MaybeAutoSaveChain(m.chain)
-			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
+			return loadCustomChain(m, name)
 		}
 
 	case inputRejectedMsg:

@@ -56,9 +56,12 @@ func chainsUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == "D" {
 			return deleteChainUnderCursor(m)
 		}
-
 		if msg.String() == "e" {
 			return editItemUnderCursor(m, "chain")
+		}
+		if msg.String() == "l" {
+			m, _ := loadCustomChain(m, m.list.SelectedItem().(item).chainItem.Name)
+			return swapView(m.(model))
 		}
 		if msg.String() == "L" {
 			return loadChain(m)
