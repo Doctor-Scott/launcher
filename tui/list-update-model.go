@@ -41,7 +41,7 @@ func getCustomDelegate() list.DefaultDelegate {
 	return delegate
 }
 
-func createList(path string) list.Model {
+func createScriptList(path string) list.Model {
 	structure := backend.GetStructure(path)
 	items := []list.Item{}
 
@@ -51,12 +51,48 @@ func createList(path string) list.Model {
 	}
 	delegate := getCustomDelegate()
 	list := list.New(items, delegate, 0, 0)
-	list.Title = "Script Launcher"
+	list.Title = "Scripts"
+	list.Styles.Title = getTitleStyle("script")
 	return list
 }
 
-func createNewModelList(m model) model {
-	m.list = createList(m.currentPath)
-	// backend.SaveChain(m.chain)
+func getTitleStyle(view string) lipgloss.Style {
+	style := lipgloss.NewStyle().
+		Bold(true).
+		Width(15).
+		Align(lipgloss.Center)
+
+	// TODO  Add this to the config
+	// or maybe from the terminal colour scheme?
+	if view == "chain" {
+		return style.Background(lipgloss.Color("#c60062"))
+	}
+	return style.Background(lipgloss.Color("#3300cc"))
+
+}
+
+func createChainList() list.Model {
+	structure := backend.GetChainStructure()
+	items := []list.Item{}
+
+	for _, chainItem := range structure {
+		items = append(items, item{title: chainItem.Name, chainItem: chainItem})
+	}
+	delegate := getCustomDelegate()
+	list := list.New(items, delegate, 0, 0)
+
+	list.Title = "Workflows"
+	list.Styles.Title = getTitleStyle("chain")
+
+	return list
+}
+
+func createNewScriptModelList(m model) model {
+	m.list = createScriptList(m.currentPath)
+	return m
+}
+
+func createNewChainModelList(m model) model {
+	m.list = createChainList()
 	return m
 }

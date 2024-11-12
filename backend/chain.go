@@ -3,9 +3,27 @@ package backend
 import (
 	C "launcher/globalConstants"
 	"log"
+	"strings"
 )
 
 type Chain []Script
+
+type ChainItem struct {
+	Name  string
+	Chain Chain
+}
+
+func GetChainStructure() []ChainItem {
+	path := ResolvePath("~") + ".launcher/custom/"
+	files := getFiles(path)
+	chainItems := []ChainItem{}
+	for _, file := range files {
+		name := strings.TrimSuffix(file, ".json")
+		chain := LoadCustomChain(name)
+		chainItems = append(chainItems, ChainItem{Name: name, Chain: chain})
+	}
+	return chainItems
+}
 
 func RunChain(stdin []byte, chain Chain) []byte {
 	if len(chain) == 0 {
@@ -21,6 +39,10 @@ func RunChain(stdin []byte, chain Chain) []byte {
 
 func AddScriptToChain(scriptToAdd Script, chain Chain) Chain {
 	return MaybeAutoSaveChain(append(chain, scriptToAdd))
+}
+
+func AddChainToChain(chainToAdd Chain, chain Chain) Chain {
+	return MaybeAutoSaveChain(append(chain, chainToAdd...))
 }
 
 func RemoveScriptFromChain(scriptToRemove Script, chain Chain) Chain {
@@ -71,9 +93,9 @@ func LoadCustomChain(name string) Chain {
 	return chain
 }
 
-func ReadChainConfig() []Script {
+func ReadChainConfig() Chain {
 	// Safely handle chain configuration
-	var chainConfig []Script
+	var chainConfig Chain
 	Load(ResolvePath("~")+"/"+C.CHAIN_SAVE_FILE, &chainConfig)
 	return chainConfig
 }

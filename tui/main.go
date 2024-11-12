@@ -68,7 +68,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	if m.currentView == "list" || m.inputModel.Selected {
+		m.inputModel.Selected = false
+		m.currentView = "list"
 		return listUpdate(msg, m)
+	}
+
+	if m.currentView == "chains" {
+		return chainsUpdate(msg, m)
 	}
 	inputModel, cmd := inputUpdate(m.inputModel, msg)
 	m.inputModel = inputModel
@@ -77,9 +83,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
-	if m.currentView == "list" || m.inputModel.Selected {
+	if m.currentView == "list" || m.currentView == "chains" || m.inputModel.Selected {
 		return docStyle.Render(m.list.View())
 	}
+
 	return inputView(m.inputModel)
 }
 
@@ -91,7 +98,7 @@ func Start(path string) {
 		currentView: "list",
 		chain:       backend.ReadChainConfig(),
 		stdout:      backend.ReadStdin(),
-		list:        createList(path),
+		list:        createScriptList(path),
 	}
 	// fmt.Printf("Loaded chain: %+v\n", m.chain)
 
