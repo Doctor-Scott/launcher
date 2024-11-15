@@ -13,4 +13,4 @@ const INPUT_SCRIPT_NAME string = "userInput"
 const INPUT_SCRIPT_DESC string = "Enter a script"
 
 // Backend constants
-const CHAIN_SAVE_FILE string = ".launcher/LAUNCHER_AUTOSAVE.json"
+const CHAIN_AUTOSAVE_FILE_NAME string = "LAUNCHER_AUTOSAVE.json"

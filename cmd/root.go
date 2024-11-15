@@ -5,12 +5,14 @@ package cmd
 
 import (
 	// "fmt"
-	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+	// "fmt"
 	"launcher/backend"
 	C "launcher/globalConstants"
 	"launcher/tui"
 	"os"
+
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var cfgFile string
@@ -48,7 +50,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.launcher.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.launcher/launcher.json)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -59,27 +61,44 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
+	viper.SetDefault("useAndInDesc", C.USE_AND_IN_DESC)
+	viper.SetDefault("clearChainAfterRun", C.CLEAR_CHAIN_AFTER_RUN)
+	viper.SetDefault("autosave", C.AUTO_SAVE)
+	viper.SetDefault("scriptTitleColor", C.SCRIPT_TITLE_COLOR)
+	viper.SetDefault("chainTitleColor", C.CHAIN_TITLE_COLOR)
+	viper.SetDefault("inputTitleColor", C.INPUT_TITLE_COLOR)
+	viper.SetDefault("cursorColor", C.CURSOR_COLOR)
+	viper.SetDefault("selectedScriptColor", C.SELECTED_SCRIPT_COLOR)
+	viper.SetDefault("chainSeparator", C.CHAIN_SEPARATOR)
+	viper.SetDefault("chainTotalSeparator", C.CHAIN_TOTAL_SEPARATOR)
+
+	defaultLauncherDir := backend.ResolvePath("~") + ".launcher"
+	defaultScriptDir := backend.ResolvePath("~") + ".scripts/launcherScripts/"
+	viper.SetDefault("launcherDir", defaultLauncherDir)
+	viper.SetDefault("scriptDir", defaultScriptDir)
+
+	viper.SetConfigName("launcher")
+	viper.SetConfigType("json")
+	viper.AutomaticEnv() // read in environment variables that match
+
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
+	} else if viperEnvConfigPath := os.Getenv("VIPER_CONFIG_PATH"); viperEnvConfigPath == "" {
+		// Use config file from $ENV
+
 		home, err := os.UserHomeDir()
-		// fmt.Println("Home directory:", home)
 		cobra.CheckErr(err)
 
 		// Search config in home directory with name ".launcher" (without extension).
 		viper.AddConfigPath(home + "/.config")
-		viper.SetConfigType("json")
-		viper.SetConfigName("launcher.json")
 
-	}
-	if !C.AUTO_SAVE {
-		backend.ClearAutoSave()
+	} else {
+		viper.AddConfigPath(viperEnvConfigPath)
+
 	}
 
 	viper.ReadInConfig()
-	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {

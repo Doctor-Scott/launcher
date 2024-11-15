@@ -15,6 +15,8 @@ type item struct {
 
 func (i item) Title() string       { return i.titlePretty }
 func (i item) Description() string { return i.desc }
+
+// BUG  Filtering is not working, it is still interpreting the key commands
 func (i item) FilterValue() string { return i.title }
 
 type vimFinishedMsg []byte

@@ -3,11 +3,13 @@ package tui
 import (
 	"bytes"
 	"fmt"
-	tea "github.com/charmbracelet/bubbletea"
 	backend "launcher/backend"
 	C "launcher/globalConstants"
 	"os"
 	"os/exec"
+
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/spf13/viper"
 )
 
 func debug(m model) (tea.Model, tea.Cmd) {
@@ -16,12 +18,14 @@ func debug(m model) (tea.Model, tea.Cmd) {
 	// fmt.Println(m.list.Items())
 	// fmt.Println("")
 	fmt.Println("")
-	fmt.Println(m.chain)
+	// fmt.Println(m.chain)
 	// fmt.Println(string(m.stdout))
 	fmt.Println("")
 	// fmt.Print(m)
 
 	// fmt.Println(m.Items())
+
+	fmt.Print(viper.AllSettings())
 	return m, nil
 }
 
@@ -64,7 +68,7 @@ func runChain(m model) (tea.Model, tea.Cmd) {
 	stdout := backend.RunChain(m.stdout, m.chain)
 	m.stdout = stdout
 
-	if C.CLEAR_CHAIN_AFTER_RUN {
+	if viper.GetBool("clearChainAfterRun") {
 		m.chain = backend.Chain{}
 	}
 

@@ -2,12 +2,14 @@ package tui
 
 import (
 	"fmt"
-	"github.com/charmbracelet/bubbles/list"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 	backend "launcher/backend"
 	C "launcher/globalConstants"
 	"os"
+
+	"github.com/charmbracelet/bubbles/list"
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
+	"github.com/spf13/viper"
 )
 
 var docStyle = lipgloss.NewStyle().Margin(1, 2)
@@ -108,6 +110,12 @@ func Start(path string) {
 
 	// backend.SaveChain(m.chain)
 
+	if !viper.GetBool("autosave") {
+		backend.ClearAutoSave()
+	}
+
+	//TODO  The help screen could do with updating to show the keymaps
+	//TODO  Set the keymaps as config options
 	p := tea.NewProgram(m, tea.WithAltScreen())
 
 	if _, err := p.Run(); err != nil {

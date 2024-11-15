@@ -4,6 +4,8 @@ import (
 	backend "launcher/backend"
 	C "launcher/globalConstants"
 	"strconv"
+
+	"github.com/spf13/viper"
 )
 
 func generateSelectedItemView(m model) model {
@@ -65,6 +67,7 @@ func findScriptIndexes(chain backend.Chain, script backend.Script) []int {
 }
 
 func generatePositionString(indexes []int, chainLength int) string {
+	separator := viper.GetString("chainSeparator")
 	desc := "Position: " + strconv.Itoa(indexes[0]+1)
 	if len(indexes) != 1 {
 
@@ -72,20 +75,20 @@ func generatePositionString(indexes []int, chainLength int) string {
 			if i == 0 {
 				continue
 			}
-			if C.USE_AND_IN_DESC {
+			if viper.GetBool("useAndInDesc") {
 				if i != len(indexes)-1 {
-					desc += ", "
+					desc += separator
 				} else {
 					desc += " and "
 				}
 			} else {
-				desc += ", "
+				desc += separator
 			}
 
 			desc += strconv.Itoa(index + 1)
 		}
 	}
-	desc += " of " + strconv.Itoa(chainLength)
+	desc += viper.GetString("chainTotalSeparator") + strconv.Itoa(chainLength)
 	return desc
 
 }

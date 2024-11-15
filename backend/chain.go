@@ -4,6 +4,8 @@ import (
 	C "launcher/globalConstants"
 	"log"
 	"strings"
+
+	"github.com/spf13/viper"
 )
 
 type Chain []Script
@@ -14,7 +16,7 @@ type ChainItem struct {
 }
 
 func GetChainStructure() []ChainItem {
-	path := ResolvePath("~") + ".launcher/custom/"
+	path := viper.GetString("launcherDir") + "/custom/"
 	files := getFiles(path)
 	chainItems := []ChainItem{}
 	for _, file := range files {
@@ -27,7 +29,7 @@ func GetChainStructure() []ChainItem {
 
 func RunChain(stdin []byte, chain Chain) []byte {
 	if len(chain) == 0 {
-		if C.CLEAR_CHAIN_AFTER_RUN {
+		if viper.GetBool("clearChainAfterRun") {
 			MaybeAutoSaveChain(chain)
 		}
 		return stdin
@@ -59,7 +61,7 @@ func RemoveScriptFromChain(scriptToRemove Script, chain Chain) Chain {
 }
 
 func DeleteChainConfig(name string) {
-	path := ResolvePath("~") + ".launcher/custom/" + name + ".json"
+	path := viper.GetString("launcherDir") + "/custom/" + name + ".json"
 	err := DeleteFile(path)
 	if err != nil {
 		log.Fatal(err)
@@ -68,8 +70,8 @@ func DeleteChainConfig(name string) {
 }
 
 func MaybeAutoSaveChain(chain Chain) Chain {
-	if C.AUTO_SAVE {
-		err := Save(ResolvePath("~")+"/"+C.CHAIN_SAVE_FILE, chain)
+	if viper.GetBool("autosave") {
+		err := Save(viper.GetString("launcherDir")+"/"+C.CHAIN_AUTOSAVE_FILE_NAME, chain)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -80,7 +82,7 @@ func MaybeAutoSaveChain(chain Chain) Chain {
 func ClearAutoSave() Chain {
 	chain := Chain{}
 
-	err := Save(ResolvePath("~")+"/"+C.CHAIN_SAVE_FILE, chain)
+	err := Save(viper.GetString("launcherDir")+"/"+C.CHAIN_AUTOSAVE_FILE_NAME, chain)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -88,7 +90,7 @@ func ClearAutoSave() Chain {
 }
 
 func SaveCustomChain(chain Chain, name string) Chain {
-	err := Save(ResolvePath("~")+".launcher/custom/"+name+".json", chain)
+	err := Save(viper.GetString("launcherDir")+"/custom/"+name+".json", chain)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -98,13 +100,13 @@ func SaveCustomChain(chain Chain, name string) Chain {
 
 func LoadCustomChain(name string) Chain {
 	var chain Chain
-	Load(ResolvePath("~")+".launcher/custom/"+name+".json", &chain)
+	Load(viper.GetString("launcherDir")+"/custom/"+name+".json", &chain)
 	return chain
 }
 
 func ReadChainConfig() Chain {
 	// Safely handle chain configuration
 	var chainConfig Chain
-	Load(ResolvePath("~")+"/"+C.CHAIN_SAVE_FILE, &chainConfig)
+	Load(viper.GetString("launcherDir")+"/"+C.CHAIN_AUTOSAVE_FILE_NAME, &chainConfig)
 	return chainConfig
 }

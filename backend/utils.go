@@ -5,11 +5,13 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/spf13/viper"
 )
 
 func ResolvePath(path string) string {
 	if path == "" {
-		return os.Getenv("DEFAULT_SCRIPT_PATH")
+		return viper.GetString("scriptDir")
 	}
 	if path == "~" {
 		path = os.Getenv("HOME")

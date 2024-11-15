@@ -1,11 +1,13 @@
 package tui
 
 import (
+	backend "launcher/backend"
+	C "launcher/globalConstants"
+
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	backend "launcher/backend"
-	C "launcher/globalConstants"
+	"github.com/spf13/viper"
 )
 
 func getCustomDelegate() list.DefaultDelegate {
@@ -16,12 +18,10 @@ func getCustomDelegate() list.DefaultDelegate {
 			item := listItem.(item)
 
 			if item.selected == true {
-				// TODO  Add this to the config
-				// or maybe from the terminal colour scheme?
-				item.titlePretty = lipgloss.NewStyle().Foreground(lipgloss.Color("#6fe600")).Render(item.title)
+				item.titlePretty = lipgloss.NewStyle().Foreground(lipgloss.Color(viper.GetString("selectedScriptColor"))).Render(item.title)
 				m.SetItem(i, item)
 			} else if item.title == "Input" {
-				item.titlePretty = lipgloss.NewStyle().Foreground(lipgloss.Color("#e64d00")).Render(item.title)
+				item.titlePretty = lipgloss.NewStyle().Foreground(lipgloss.Color(viper.GetString("inputTitleColor"))).Render(item.title)
 				m.SetItem(i, item)
 
 			} else {
@@ -33,15 +33,16 @@ func getCustomDelegate() list.DefaultDelegate {
 
 		return nil
 	}
-	// TODO  Add this to the config
-	// or maybe from the terminal colour scheme?
-	c := lipgloss.Color("#6fe6fc")
+	c := lipgloss.Color(viper.GetString("cursorColor"))
 	delegate.Styles.SelectedTitle = delegate.Styles.SelectedTitle.Foreground(c).BorderLeftForeground(c)
 	delegate.Styles.SelectedDesc = delegate.Styles.SelectedTitle // reuse the title style here
 	return delegate
 }
 
 func createScriptList(path string) list.Model {
+	if path == "" {
+		path = viper.GetString("scriptDir")
+	}
 	structure := backend.GetStructure(path)
 	items := []list.Item{}
 
@@ -62,12 +63,10 @@ func getTitleStyle(view string) lipgloss.Style {
 		Width(15).
 		Align(lipgloss.Center)
 
-	// TODO  Add this to the config
-	// or maybe from the terminal colour scheme?
 	if view == "chain" {
-		return style.Background(lipgloss.Color("#c60062"))
+		return style.Background(lipgloss.Color(viper.GetString("chainTitleColor")))
 	}
-	return style.Background(lipgloss.Color("#3300cc"))
+	return style.Background(lipgloss.Color(viper.GetString("scriptTitleColor")))
 
 }
 
