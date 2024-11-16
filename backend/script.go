@@ -38,19 +38,59 @@ func GetScriptFromCommand(command string) Script {
 }
 
 func resolveArgsString(argsString string) []string {
-	args := strings.Split(argsString, " ")
-	//rejoin quoted args and expand environment variables
-	for i, arg := range args {
-		// BUG  I think this needs to be adjusted
-		// a string with spaces in the quotes would not work here I dont think
-		//TODO  good oppertunity for a test
-		if strings.HasPrefix(arg, "\"") && strings.HasSuffix(arg, "\"") {
-			args[i] = strings.Trim(arg, "\"")
+	if len(argsString) == 0 {
+		return []string{""}
+	}
+
+	var args []string
+	var currentArg strings.Builder
+	inQuotes := false
+	quoteChar := rune(0)
+
+	// Parse character by character to handle quotes properly
+	for _, char := range argsString {
+		switch {
+		case char == '"' || char == '\'':
+			if inQuotes && char == quoteChar {
+				// End of quoted section
+				inQuotes = false
+				arg := currentArg.String()
+				if quoteChar == '"' {
+					// Only expand env vars in double quotes
+					arg = os.ExpandEnv(arg)
+				}
+				args = append(args, arg)
+				currentArg.Reset()
+				quoteChar = 0
+			} else if !inQuotes {
+				inQuotes = true
+				quoteChar = char
+			} else {
+				currentArg.WriteRune(char)
+			}
+		case char == ' ' && !inQuotes:
+			if currentArg.Len() > 0 {
+				// Unquoted argument
+				arg := os.ExpandEnv(currentArg.String())
+				args = append(args, arg)
+				currentArg.Reset()
+			}
+		default:
+			currentArg.WriteRune(char)
 		}
-		if strings.HasPrefix(arg, "'") && strings.HasSuffix(arg, "'") {
-			args[i] = strings.Trim(arg, "'")
+	}
+
+	// Add the last argument if there is one
+	if currentArg.Len() > 0 {
+		arg := currentArg.String()
+		if !inQuotes {
+			// Unquoted argument
+			arg = os.ExpandEnv(arg)
+		} else if quoteChar == '"' {
+			// Double quoted argument
+			arg = os.ExpandEnv(arg)
 		}
-		args[i] = os.ExpandEnv(arg)
+		args = append(args, arg)
 	}
 	return args
 }
