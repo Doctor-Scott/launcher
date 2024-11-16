@@ -1,0 +1,13 @@
+[
+	{
+		"Name": "command_one",
+		"Command": "echo",
+		"Args": ["hello", "world"]
+	},
+	{
+		"Name": "command_two",
+		"Command": "cat",
+		"Args": []
+	}
+]
+
