@@ -7,11 +7,13 @@ import (
 	"path/filepath"
 
 	"github.com/spf13/viper"
+	C "launcher/globalConstants"
 )
 
 func ResolvePath(path string) string {
+	path = os.ExpandEnv(path)
 	if path == "" {
-		return viper.GetString("scriptDir")
+		return viper.GetString(C.ScriptDir.Name)
 	}
 	if path == "~" {
 		path = os.Getenv("HOME")
@@ -20,7 +22,7 @@ func ResolvePath(path string) string {
 	var err error
 	path, err = filepath.Abs(path)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	return path + "/"
 }

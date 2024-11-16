@@ -4,9 +4,6 @@ Copyright © 2024 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	// "fmt"
-	// "fmt"
-	"launcher/backend"
 	C "launcher/globalConstants"
 	"launcher/tui"
 	"os"
@@ -61,24 +58,21 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	viper.SetDefault("useAndInDesc", C.USE_AND_IN_DESC)
-	viper.SetDefault("clearChainAfterRun", C.CLEAR_CHAIN_AFTER_RUN)
-	viper.SetDefault("autosave", C.AUTO_SAVE)
-	viper.SetDefault("scriptTitleColor", C.SCRIPT_TITLE_COLOR)
-	viper.SetDefault("chainTitleColor", C.CHAIN_TITLE_COLOR)
-	viper.SetDefault("inputTitleColor", C.INPUT_TITLE_COLOR)
-	viper.SetDefault("cursorColor", C.CURSOR_COLOR)
-	viper.SetDefault("selectedScriptColor", C.SELECTED_SCRIPT_COLOR)
-	viper.SetDefault("chainSeparator", C.CHAIN_SEPARATOR)
-	viper.SetDefault("chainTotalSeparator", C.CHAIN_TOTAL_SEPARATOR)
-
-	defaultLauncherDir := backend.ResolvePath("~") + ".launcher"
-	defaultScriptDir := backend.ResolvePath("~") + ".scripts/launcherScripts/"
-	viper.SetDefault("launcherDir", defaultLauncherDir)
-	viper.SetDefault("scriptDir", defaultScriptDir)
+	viper.SetDefault(C.UseAndInDescription.Name, C.UseAndInDescription.DefaultValue)
+	viper.SetDefault(C.ClearChainAfterRun.Name, C.ClearChainAfterRun.DefaultValue)
+	viper.SetDefault(C.Autosave.Name, C.Autosave.DefaultValue)
+	viper.SetDefault(C.ScriptTitleColor.Name, C.ScriptTitleColor.DefaultValue)
+	viper.SetDefault(C.ChainTitleColor.Name, C.ChainTitleColor.DefaultValue)
+	viper.SetDefault(C.InputTitleColor.Name, C.InputTitleColor.DefaultValue)
+	viper.SetDefault(C.CursorColor.Name, C.CursorColor.DefaultValue)
+	viper.SetDefault(C.SelectedScriptColor.Name, C.SelectedScriptColor.DefaultValue)
+	viper.SetDefault(C.ChainSeparator.Name, C.ChainSeparator.DefaultValue)
+	viper.SetDefault(C.ChainTotalSeparator.Name, C.ChainTotalSeparator.DefaultValue)
+	viper.SetDefault(C.LauncherDir.Name, C.LauncherDir.DefaultValue)
+	viper.SetDefault(C.ScriptDir.Name, C.ScriptDir.DefaultValue)
 
 	viper.SetConfigName("launcher")
-	viper.SetConfigType("json")
+	viper.SetConfigType("toml")
 	viper.AutomaticEnv() // read in environment variables that match
 
 	if cfgFile != "" {
@@ -97,11 +91,10 @@ func initConfig() {
 		viper.AddConfigPath(viperEnvConfigPath)
 
 	}
-
 	viper.ReadInConfig()
 
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		// fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
-	}
+	// viper.OnConfigChange(func(e fsnotify.Event) {
+	// fmt.Println("Config file changed:", e.Name)
+	// })
+	viper.WatchConfig()
 }

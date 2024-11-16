@@ -25,8 +25,7 @@ func initialInputModel(prompt string, returnCommand int) inputModel {
 	ti := textinput.New()
 	// ti.Placeholder = prompt
 	ti.Focus()
-	ti.CharLimit = 156
-	ti.Width = 20
+	ti.Width = 50
 
 	return inputModel{
 		textInput:     ti,

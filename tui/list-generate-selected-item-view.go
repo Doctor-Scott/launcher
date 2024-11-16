@@ -75,7 +75,7 @@ func generatePositionString(indexes []int, chainLength int) string {
 			if i == 0 {
 				continue
 			}
-			if viper.GetBool("useAndInDesc") {
+			if viper.GetBool(C.UseAndInDescription.Name) {
 				if i != len(indexes)-1 {
 					desc += separator
 				} else {

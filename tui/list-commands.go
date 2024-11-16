@@ -33,7 +33,7 @@ func swapView(m model) (tea.Model, tea.Cmd) {
 	// swap view between script and chains
 	if m.currentView == "list" {
 		m.list.ResetSelected()
-		m.list = createChainList()
+		m.list = createChainList("")
 		m.currentView = "chains"
 	} else {
 		m.list.ResetSelected()
@@ -112,6 +112,26 @@ func openNvimInLauncherDirectory(m model) (tea.Model, tea.Cmd) {
 		}
 		return updateStructureMsg(true)
 	})
+}
+
+func openConfig(m model) (tea.Model, tea.Cmd) {
+	configFile := viper.ConfigFileUsed()
+	cmd := exec.Command("nvim", configFile)
+	// m.list.ResetSelected()
+	// fmt.Println(configFile)
+	// return m, nil
+
+	return m, tea.ExecProcess(cmd, func(err error) tea.Msg {
+		if err != nil {
+			return fmt.Errorf("failed to run : %w", err)
+		}
+		return updateStructureMsg(true)
+	})
+}
+
+func writeConfig(m model) (tea.Model, tea.Cmd) {
+	viper.WriteConfig()
+	return m, nil
 }
 
 func openWithVipe(m model) (tea.Model, tea.Cmd) {

@@ -70,8 +70,11 @@ func getTitleStyle(view string) lipgloss.Style {
 
 }
 
-func createChainList() list.Model {
-	structure := backend.GetChainStructure()
+func createChainList(path string) list.Model {
+	if path == "" {
+		path = viper.GetString(C.LauncherDir.Name) + "/custom/"
+	}
+	structure := backend.GetChainStructure(path)
 	items := []list.Item{}
 
 	for _, chainItem := range structure {
@@ -92,6 +95,6 @@ func createNewScriptModelList(m model) model {
 }
 
 func createNewChainModelList(m model) model {
-	m.list = createChainList()
+	m.list = createChainList("")
 	return m
 }

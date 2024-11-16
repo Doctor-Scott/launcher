@@ -52,6 +52,9 @@ func chainsUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == "c" {
 			return clearState(m)
 		}
+		if msg.String() == "C" {
+			return openConfig(m)
+		}
 		if msg.String() == "d" {
 			return debug(m)
 		}
@@ -76,6 +79,10 @@ func chainsUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		}
 		if msg.String() == "R" {
 			return runChain(m)
+		}
+		if msg.String() == "U" {
+			return writeConfig(m)
+
 		}
 		if msg.String() == "v" {
 			return openWithVipe(m)
@@ -129,6 +136,9 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == "c" {
 			return clearState(m)
 		}
+		if msg.String() == "C" {
+			return openConfig(m)
+		}
 		if msg.String() == "d" {
 			return debug(m)
 		}
@@ -152,6 +162,10 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		}
 		if msg.String() == "v" {
 			return openWithVipe(m)
+		}
+		if msg.String() == "U" {
+			return writeConfig(m)
+
 		}
 		if msg.String() == "W" {
 			return writeChain(m)

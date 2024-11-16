@@ -1,16 +1,24 @@
 package globalConstants
 
-const CLEAR_CHAIN_AFTER_RUN bool = false
-const AUTO_SAVE bool = true
+import "os"
 
-// selected item description wording options
-const USE_AND_IN_DESC bool = false
-const CHAIN_SEPARATOR string = ", "
-const CHAIN_TOTAL_SEPARATOR string = " of "
+type configItem struct {
+	Name         string
+	DefaultValue any
+}
 
-// Colours
-const SCRIPT_TITLE_COLOR string = "#3300cc"
-const CHAIN_TITLE_COLOR string = "#c60062"
-const INPUT_TITLE_COLOR string = "#e64d00"
-const CURSOR_COLOR string = "#6fe6fc"
-const SELECTED_SCRIPT_COLOR string = "#6fe600"
+var ClearChainAfterRun = configItem{"clearChainAfterRun", false}
+
+var Autosave = configItem{"autosave", true}
+var UseAndInDescription = configItem{"useAndInDescription", false}
+var ChainSeparator = configItem{"chainSeparator", ", "}
+var ChainTotalSeparator = configItem{"chainTotalSeparator", " of "}
+var ScriptTitleColor = configItem{"scriptTitleColor", "#3300cc"}
+var ChainTitleColor = configItem{"chainTitleColor", "#c60062"}
+var InputTitleColor = configItem{"inputTitleColor", "#e64d00"}
+var CursorColor = configItem{"cursorColor", "#6fe6fc"}
+var SelectedScriptColor = configItem{"selectedScriptColor", "#6fe600"}
+
+var path string = os.Getenv("HOME")
+var LauncherDir = configItem{"launcherDir", path + "/.launcher"}
+var ScriptDir = configItem{"scriptDir", path + "/.scripts/launcherScripts/"}
