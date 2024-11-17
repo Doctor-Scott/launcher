@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# Pre-commit hook to verify what is about to be committed.
+# Runs go tests before allowing commit.
+
+# Run Go tests
+echo "Running Go tests..."
+if ! go test ./...
+then
+    echo "Go tests failed. Please fix the tests before committing."
+    exit 1
+fi
+
