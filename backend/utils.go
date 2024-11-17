@@ -13,7 +13,7 @@ import (
 func ResolvePath(path string) string {
 	path = os.ExpandEnv(path)
 	if path == "" {
-		return viper.GetString(C.ScriptDir.Name)
+		return viper.GetString(C.PathConfig.ScriptDir.Name)
 	}
 	if path == "~" {
 		path = os.Getenv("HOME")

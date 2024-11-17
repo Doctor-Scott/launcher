@@ -68,7 +68,7 @@ func runChain(m model) (tea.Model, tea.Cmd) {
 	stdout := backend.RunChain(m.stdout, m.chain)
 	m.stdout = stdout
 
-	if viper.GetBool("clearChainAfterRun") {
+	if viper.GetBool(C.ClearChainAfterRun.Name) {
 		m.chain = backend.Chain{}
 	}
 

@@ -18,10 +18,10 @@ func getCustomDelegate() list.DefaultDelegate {
 			item := listItem.(item)
 
 			if item.selected == true {
-				item.titlePretty = lipgloss.NewStyle().Foreground(lipgloss.Color(viper.GetString("selectedScriptColor"))).Render(item.title)
+				item.titlePretty = lipgloss.NewStyle().Foreground(lipgloss.Color(viper.GetString(C.ColorConfig.SelectedScript.Name))).Render(item.title)
 				m.SetItem(i, item)
 			} else if item.title == "Input" {
-				item.titlePretty = lipgloss.NewStyle().Foreground(lipgloss.Color(viper.GetString("inputTitleColor"))).Render(item.title)
+				item.titlePretty = lipgloss.NewStyle().Foreground(lipgloss.Color(viper.GetString(C.ColorConfig.InputTitle.Name))).Render(item.title)
 				m.SetItem(i, item)
 
 			} else {
@@ -33,7 +33,7 @@ func getCustomDelegate() list.DefaultDelegate {
 
 		return nil
 	}
-	c := lipgloss.Color(viper.GetString("cursorColor"))
+	c := lipgloss.Color(viper.GetString(C.ColorConfig.Cursor.Name))
 	delegate.Styles.SelectedTitle = delegate.Styles.SelectedTitle.Foreground(c).BorderLeftForeground(c)
 	delegate.Styles.SelectedDesc = delegate.Styles.SelectedTitle // reuse the title style here
 	return delegate
@@ -41,7 +41,7 @@ func getCustomDelegate() list.DefaultDelegate {
 
 func createScriptList(path string) list.Model {
 	if path == "" {
-		path = viper.GetString("scriptDir")
+		path = viper.GetString(C.PathConfig.ScriptDir.Name)
 	}
 	structure := backend.GetStructure(path)
 	items := []list.Item{}
@@ -64,15 +64,15 @@ func getTitleStyle(view string) lipgloss.Style {
 		Align(lipgloss.Center)
 
 	if view == "chain" {
-		return style.Background(lipgloss.Color(viper.GetString("chainTitleColor")))
+		return style.Background(lipgloss.Color(viper.GetString(C.ColorConfig.ChainTitle.Name)))
 	}
-	return style.Background(lipgloss.Color(viper.GetString("scriptTitleColor")))
+	return style.Background(lipgloss.Color(viper.GetString(C.ColorConfig.ScriptTitle.Name)))
 
 }
 
 func createChainList(path string) list.Model {
 	if path == "" {
-		path = viper.GetString(C.LauncherDir.Name) + "/custom/"
+		path = viper.GetString(C.PathConfig.LauncherDir.Name) + "/custom/"
 	}
 	structure := backend.GetChainStructure(path)
 	items := []list.Item{}

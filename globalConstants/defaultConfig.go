@@ -2,23 +2,51 @@ package globalConstants
 
 import "os"
 
-type configItem struct {
+type stringConfigItem struct {
 	Name         string
-	DefaultValue any
+	DefaultValue string
+}
+type boolConfigItem struct {
+	Name         string
+	DefaultValue bool
 }
 
-var ClearChainAfterRun = configItem{"clearChainAfterRun", false}
+type pathConfig struct {
+	LauncherDir stringConfigItem
+	ScriptDir   stringConfigItem
+}
+type itemDescriptionConfig struct {
+	UseAnd              boolConfigItem
+	ChainSeparator      stringConfigItem
+	ChainTotalSeparator stringConfigItem
+}
+type colorConfig struct {
+	ScriptTitle    stringConfigItem
+	ChainTitle     stringConfigItem
+	InputTitle     stringConfigItem
+	Cursor         stringConfigItem
+	SelectedScript stringConfigItem
+}
 
-var Autosave = configItem{"autosave", true}
-var UseAndInDescription = configItem{"useAndInDescription", false}
-var ChainSeparator = configItem{"chainSeparator", ", "}
-var ChainTotalSeparator = configItem{"chainTotalSeparator", " of "}
-var ScriptTitleColor = configItem{"scriptTitleColor", "#3300cc"}
-var ChainTitleColor = configItem{"chainTitleColor", "#c60062"}
-var InputTitleColor = configItem{"inputTitleColor", "#e64d00"}
-var CursorColor = configItem{"cursorColor", "#6fe6fc"}
-var SelectedScriptColor = configItem{"selectedScriptColor", "#6fe600"}
+var ClearChainAfterRun = boolConfigItem{"clearChainAfterRun", false}
+var Autosave = boolConfigItem{"autosave", true}
 
 var path string = os.Getenv("HOME")
-var LauncherDir = configItem{"launcherDir", path + "/.launcher"}
-var ScriptDir = configItem{"scriptDir", path + "/.scripts/launcherScripts/"}
+var PathConfig = pathConfig{
+	stringConfigItem{"paths.launcherDir", path + "/.launcher/"},
+	stringConfigItem{"paths.scriptDir", path + "/.scripts/launcherScripts/"},
+}
+
+var ItemDescriptionConfig = itemDescriptionConfig{
+	boolConfigItem{"item_Description.useAndInDescription", false},
+	stringConfigItem{"item_Description.chainSeparator", ", "},
+	stringConfigItem{"item_Description.chainTotalSeparator", " of "},
+}
+
+var ColorConfig = colorConfig{
+	stringConfigItem{"colors.scriptTitle", "#3300cc"},
+	stringConfigItem{"colors.chainTitle", "#c60062"},
+	stringConfigItem{"colors.inputTitle", "#e64d00"},
+	stringConfigItem{"colors.cursor", "#6fe6fc"},
+	stringConfigItem{"colors.selectedScript", "#6fe600"},
+}

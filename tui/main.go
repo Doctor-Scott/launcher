@@ -28,7 +28,7 @@ func (m model) Init() tea.Cmd {
 }
 
 func loadCustomChain(m model, name string) (tea.Model, tea.Cmd) {
-	path := viper.GetString(C.LauncherDir.Name) + "/custom/"
+	path := viper.GetString(C.PathConfig.LauncherDir.Name) + "/custom/"
 	m.chain = backend.LoadCustomChain(path, name)
 	backend.MaybeAutoSaveChain(m.chain)
 	return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
@@ -61,7 +61,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 		case C.SAVE_CUSTOM_CHAIN:
 			name := m.inputModel.textInput.Value()
-			backend.SaveCustomChain(m.chain, viper.GetString(C.LauncherDir.Name)+"/custom/", name)
+			backend.SaveCustomChain(m.chain, viper.GetString(C.PathConfig.LauncherDir.Name)+"/custom/", name)
 			return m, nil
 
 		case C.LOAD_CUSTOM_CHAIN:
@@ -111,7 +111,7 @@ func Start(path string) {
 
 	// backend.SaveChain(m.chain)
 
-	if !viper.GetBool("autosave") {
+	if !viper.GetBool(C.Autosave.Name) {
 		backend.ClearAutoSave()
 	}
 

@@ -58,18 +58,19 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	viper.SetDefault(C.UseAndInDescription.Name, C.UseAndInDescription.DefaultValue)
 	viper.SetDefault(C.ClearChainAfterRun.Name, C.ClearChainAfterRun.DefaultValue)
 	viper.SetDefault(C.Autosave.Name, C.Autosave.DefaultValue)
-	viper.SetDefault(C.ScriptTitleColor.Name, C.ScriptTitleColor.DefaultValue)
-	viper.SetDefault(C.ChainTitleColor.Name, C.ChainTitleColor.DefaultValue)
-	viper.SetDefault(C.InputTitleColor.Name, C.InputTitleColor.DefaultValue)
-	viper.SetDefault(C.CursorColor.Name, C.CursorColor.DefaultValue)
-	viper.SetDefault(C.SelectedScriptColor.Name, C.SelectedScriptColor.DefaultValue)
-	viper.SetDefault(C.ChainSeparator.Name, C.ChainSeparator.DefaultValue)
-	viper.SetDefault(C.ChainTotalSeparator.Name, C.ChainTotalSeparator.DefaultValue)
-	viper.SetDefault(C.LauncherDir.Name, C.LauncherDir.DefaultValue)
-	viper.SetDefault(C.ScriptDir.Name, C.ScriptDir.DefaultValue)
+	viper.SetDefault(C.ColorConfig.ScriptTitle.Name, C.ColorConfig.ScriptTitle.DefaultValue)
+	viper.SetDefault(C.ColorConfig.ChainTitle.Name, C.ColorConfig.ChainTitle.DefaultValue)
+	viper.SetDefault(C.ColorConfig.InputTitle.Name, C.ColorConfig.InputTitle.DefaultValue)
+	viper.SetDefault(C.ColorConfig.Cursor.Name, C.ColorConfig.Cursor.DefaultValue)
+	viper.SetDefault(C.ColorConfig.SelectedScript.Name, C.ColorConfig.SelectedScript.DefaultValue)
+	viper.SetDefault(C.ItemDescriptionConfig.UseAnd.Name, C.ItemDescriptionConfig.UseAnd.DefaultValue)
+	viper.SetDefault(C.ItemDescriptionConfig.ChainSeparator.Name, C.ItemDescriptionConfig.ChainSeparator.DefaultValue)
+	viper.SetDefault(C.ItemDescriptionConfig.ChainTotalSeparator.Name, C.ItemDescriptionConfig.ChainTotalSeparator.DefaultValue)
+
+	viper.SetDefault(C.PathConfig.LauncherDir.Name, C.PathConfig.LauncherDir.DefaultValue)
+	viper.SetDefault(C.PathConfig.ScriptDir.Name, C.PathConfig.ScriptDir.DefaultValue)
 
 	viper.SetConfigName("launcher")
 	viper.SetConfigType("toml")

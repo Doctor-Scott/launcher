@@ -17,7 +17,7 @@ type ChainItem struct {
 
 func GetChainStructure(path string) []ChainItem {
 	if path == "" {
-		path = viper.GetString(C.LauncherDir.Name) + "/custom/"
+		path = viper.GetString(C.PathConfig.LauncherDir.Name) + "/custom/"
 	}
 	files := getFiles(path)
 	chainItems := []ChainItem{}
@@ -31,7 +31,7 @@ func GetChainStructure(path string) []ChainItem {
 
 func RunChain(stdin []byte, chain Chain) []byte {
 	if len(chain) == 0 {
-		if viper.GetBool("clearChainAfterRun") {
+		if viper.GetBool(C.ClearChainAfterRun.Name) {
 			MaybeAutoSaveChain(chain)
 		}
 		return stdin
@@ -63,7 +63,7 @@ func RemoveScriptFromChain(scriptToRemove Script, chain Chain) Chain {
 }
 
 func DeleteChainConfig(name string) {
-	path := viper.GetString(C.LauncherDir.Name) + "/custom/" + name + ".json"
+	path := viper.GetString(C.PathConfig.LauncherDir.Name) + "/custom/" + name + ".json"
 	err := DeleteFile(path)
 	if err != nil {
 		log.Fatal(err)
@@ -72,8 +72,8 @@ func DeleteChainConfig(name string) {
 }
 
 func MaybeAutoSaveChain(chain Chain) Chain {
-	if viper.GetBool("autosave") {
-		err := Save(viper.GetString(C.LauncherDir.Name)+"/"+C.CHAIN_AUTOSAVE_FILE_NAME, chain)
+	if viper.GetBool(C.Autosave.Name) {
+		err := Save(viper.GetString(C.PathConfig.LauncherDir.Name)+"/"+C.CHAIN_AUTOSAVE_FILE_NAME, chain)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -84,7 +84,7 @@ func MaybeAutoSaveChain(chain Chain) Chain {
 func ClearAutoSave() Chain {
 	chain := Chain{}
 
-	err := Save(viper.GetString(C.LauncherDir.Name)+"/"+C.CHAIN_AUTOSAVE_FILE_NAME, chain)
+	err := Save(viper.GetString(C.PathConfig.LauncherDir.Name)+"/"+C.CHAIN_AUTOSAVE_FILE_NAME, chain)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -109,6 +109,6 @@ func LoadCustomChain(path string, name string) Chain {
 func ReadChainConfig() Chain {
 	// Safely handle chain configuration
 	var chainConfig Chain
-	Load(viper.GetString(C.LauncherDir.Name)+"/"+C.CHAIN_AUTOSAVE_FILE_NAME, &chainConfig)
+	Load(viper.GetString(C.PathConfig.LauncherDir.Name)+"/"+C.CHAIN_AUTOSAVE_FILE_NAME, &chainConfig)
 	return chainConfig
 }
