@@ -43,7 +43,7 @@ func swapView(m model) (tea.Model, tea.Cmd) {
 	return m, func() tea.Msg { return updateStructureMsg(true) }
 }
 
-func addItemToChain(m model, itemType string) (tea.Model, tea.Cmd) {
+func addScriptToChain(m model, itemType string) (tea.Model, tea.Cmd) {
 	if m.list.SelectedItem().(item).title == "Input" {
 		m.inputModel = initialInputModel("Script:", C.ADD_SCRIPT_TO_CHAIN)
 		m.currentView = "input"

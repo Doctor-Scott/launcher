@@ -116,7 +116,6 @@ func Start(path string) {
 	}
 
 	//TODO  The help screen could do with updating to show the keymaps
-	//TODO  Set the keymaps as config options
 	p := tea.NewProgram(m, tea.WithAltScreen())
 
 	if _, err := p.Run(); err != nil {

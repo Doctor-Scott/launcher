@@ -2,7 +2,9 @@ package tui
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/spf13/viper"
 	backend "launcher/backend"
+	C "launcher/globalConstants"
 )
 
 type item struct {
@@ -43,51 +45,51 @@ func chainsUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == tea.KeyTab.String() {
 			return swapView(m)
 		}
-		if msg.String() == "enter" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Item.RunUnderCursor.Name) {
 			return runItemUnderCursor(m, "chain")
 		}
-		if msg.String() == "a" {
-			return addItemToChain(m, "chain")
+		if msg.String() == viper.GetString(C.KeybindingConfig.Item.AddToChain.Name) {
+			return addScriptToChain(m, "chain")
 		}
-		if msg.String() == "c" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.ClearState.Name) {
 			return clearState(m)
 		}
-		if msg.String() == "C" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Edit.OpenConfig.Name) {
 			return openConfig(m)
 		}
-		if msg.String() == "d" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Debug.Name) {
 			return debug(m)
 		}
-		if msg.String() == "D" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Chain.DeleteUnderCursor.Name) {
 			return deleteChainUnderCursor(m)
 		}
-		if msg.String() == "e" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Edit.OpenItemUnderCursor.Name) {
 			return editItemUnderCursor(m, "chain")
 		}
-		if msg.String() == "l" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Chain.LoadUnderCursor.Name) {
 			m, _ := loadCustomChain(m, m.list.SelectedItem().(item).chainItem.Name)
 			return swapView(m.(model))
 		}
-		if msg.String() == "L" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Chain.LoadKnown.Name) {
 			return loadChain(m)
 		}
-		if msg.String() == "n" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Edit.OpenNvim.Name) {
 			return openNvimInLauncherDirectory(m)
 		}
-		if msg.String() == "r" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.RefreshView.Name) {
 			return refreshView(m)
 		}
-		if msg.String() == "R" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Chain.RunChain.Name) {
 			return runChain(m)
 		}
-		if msg.String() == "U" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.WriteConfig.Name) {
 			return writeConfig(m)
 
 		}
-		if msg.String() == "v" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Edit.OpenStdout.Name) {
 			return openWithVipe(m)
 		}
-		if msg.String() == "W" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Chain.Write.Name) {
 			return writeChain(m)
 		}
 
@@ -121,53 +123,53 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == tea.KeyTab.String() {
 			return swapView(m)
 		}
-		if msg.String() == "enter" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Item.RunUnderCursor.Name) {
 			return runItemUnderCursor(m, "script")
 		}
-		if msg.String() == tea.KeySpace.String() {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Script.AddArgsAndRun.Name) {
 			return runScriptWithArgs(m)
 		}
-		if msg.String() == "a" {
-			return addItemToChain(m, "script")
+		if msg.String() == viper.GetString(C.KeybindingConfig.Item.AddToChain.Name) {
+			return addScriptToChain(m, "script")
 		}
-		if msg.String() == "A" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Script.AddArgsThenAddToChain.Name) {
 			return addScriptWithArgs(m)
 		}
-		if msg.String() == "c" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.ClearState.Name) {
 			return clearState(m)
 		}
-		if msg.String() == "C" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Edit.OpenConfig.Name) {
 			return openConfig(m)
 		}
-		if msg.String() == "d" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Debug.Name) {
 			return debug(m)
 		}
-		if msg.String() == "e" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Edit.OpenItemUnderCursor.Name) {
 			return editItemUnderCursor(m, "script")
 		}
-		if msg.String() == "L" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Chain.LoadKnown.Name) {
 			return loadChain(m)
 		}
-		if msg.String() == "n" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Edit.OpenNvim.Name) {
 			return openNvimInLauncherDirectory(m)
 		}
-		if msg.String() == "r" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.RefreshView.Name) {
 			return refreshView(m)
 		}
-		if msg.String() == "R" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Chain.RunChain.Name) {
 			return runChain(m)
 		}
-		if msg.String() == "s" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Script.RemoveFromChain.Name) {
 			return removeScriptFromChain(m)
 		}
-		if msg.String() == "v" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Edit.OpenStdout.Name) {
 			return openWithVipe(m)
 		}
-		if msg.String() == "U" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.WriteConfig.Name) {
 			return writeConfig(m)
 
 		}
-		if msg.String() == "W" {
+		if msg.String() == viper.GetString(C.KeybindingConfig.Chain.Write.Name) {
 			return writeChain(m)
 		}
 

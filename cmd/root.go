@@ -72,6 +72,25 @@ func initConfig() {
 	viper.SetDefault(C.PathConfig.LauncherDir.Name, C.PathConfig.LauncherDir.DefaultValue)
 	viper.SetDefault(C.PathConfig.ScriptDir.Name, C.PathConfig.ScriptDir.DefaultValue)
 
+	//keybindings
+	viper.SetDefault(C.KeybindingConfig.Item.RunUnderCursor.Name, C.KeybindingConfig.Item.RunUnderCursor.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.Item.AddToChain.Name, C.KeybindingConfig.Item.AddToChain.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.Script.AddArgsAndRun.Name, C.KeybindingConfig.Script.AddArgsAndRun.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.Script.AddArgsThenAddToChain.Name, C.KeybindingConfig.Script.AddArgsThenAddToChain.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.Script.RemoveFromChain.Name, C.KeybindingConfig.Script.RemoveFromChain.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.Chain.RunChain.Name, C.KeybindingConfig.Chain.RunChain.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.Chain.LoadKnown.Name, C.KeybindingConfig.Chain.LoadKnown.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.Chain.LoadUnderCursor.Name, C.KeybindingConfig.Chain.LoadUnderCursor.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.Chain.Write.Name, C.KeybindingConfig.Chain.Write.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.Edit.OpenStdout.Name, C.KeybindingConfig.Edit.OpenStdout.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.Edit.OpenNvim.Name, C.KeybindingConfig.Edit.OpenNvim.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.Edit.OpenConfig.Name, C.KeybindingConfig.Edit.OpenConfig.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.Edit.OpenItemUnderCursor.Name, C.KeybindingConfig.Edit.OpenItemUnderCursor.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.ClearState.Name, C.KeybindingConfig.ClearState.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.WriteConfig.Name, C.KeybindingConfig.WriteConfig.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.RefreshView.Name, C.KeybindingConfig.RefreshView.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.Debug.Name, C.KeybindingConfig.Debug.DefaultValue)
+
 	viper.SetConfigName("launcher")
 	viper.SetConfigType("toml")
 	viper.AutomaticEnv() // read in environment variables that match

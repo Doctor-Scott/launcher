@@ -28,6 +28,82 @@ type colorConfig struct {
 	SelectedScript stringConfigItem
 }
 
+type itemBindingsConfig struct {
+	RunUnderCursor stringConfigItem
+	AddToChain     stringConfigItem
+}
+
+type scriptBindingsConfig struct {
+	AddArgsAndRun         stringConfigItem
+	AddArgsThenAddToChain stringConfigItem
+	RemoveFromChain       stringConfigItem
+}
+
+type chainBindingsConfig struct {
+	RunChain          stringConfigItem
+	LoadKnown         stringConfigItem
+	LoadUnderCursor   stringConfigItem
+	DeleteUnderCursor stringConfigItem
+	Write             stringConfigItem
+}
+
+type editBindingsConfig struct {
+	OpenStdout          stringConfigItem
+	OpenNvim            stringConfigItem
+	OpenConfig          stringConfigItem
+	OpenItemUnderCursor stringConfigItem
+}
+
+type keybindingConfig struct {
+	// both
+	Item itemBindingsConfig
+
+	// script
+	Script scriptBindingsConfig
+
+	//chain
+	Chain chainBindingsConfig
+
+	// Edit
+	Edit editBindingsConfig
+
+	//other
+	ClearState  stringConfigItem
+	WriteConfig stringConfigItem
+	RefreshView stringConfigItem
+
+	Debug stringConfigItem
+}
+
+var KeybindingConfig = keybindingConfig{
+	itemBindingsConfig{
+		stringConfigItem{"keybindings.item.runUnderCursor", "enter"},
+		stringConfigItem{"keybindings.item.addToChain", "a"},
+	},
+	scriptBindingsConfig{
+		stringConfigItem{"keybindings.script.addArgsAndRun", "space"},
+		stringConfigItem{"keybindings.script.addArgsThenAddToChain", "A"},
+		stringConfigItem{"keybindings.script.removeFromChain", "s"},
+	},
+	chainBindingsConfig{
+		stringConfigItem{"keybindings.chain.runChain", "R"},
+		stringConfigItem{"keybindings.chain.loadKnown", "L"},
+		stringConfigItem{"keybindings.chain.loadUnderCursor", "l"},
+		stringConfigItem{"keybindings.chain.deleteUnderCursor", "D"},
+		stringConfigItem{"keybindings.chain.write", "W"},
+	},
+	editBindingsConfig{
+		stringConfigItem{"keybindings.edit.openStdout", "v"},
+		stringConfigItem{"keybindings.edit.openNvim", "n"},
+		stringConfigItem{"keybindings.edit.openConfig", "C"},
+		stringConfigItem{"keybindings.edit.openItemUnderCursor", "e"},
+	},
+	stringConfigItem{"keybindings.clearState", "c"},
+	stringConfigItem{"keybindings.writeConfig", "U"},
+	stringConfigItem{"keybindings.refreshView", "r"},
+	stringConfigItem{"keybindings.debug", "d"},
+}
+
 var ClearChainAfterRun = boolConfigItem{"clearChainAfterRun", false}
 var Autosave = boolConfigItem{"autosave", true}
 
