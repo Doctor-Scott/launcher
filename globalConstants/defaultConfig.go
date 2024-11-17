@@ -77,52 +77,52 @@ type keybindingConfig struct {
 
 var KeybindingConfig = keybindingConfig{
 	itemBindingsConfig{
-		stringConfigItem{"keybindings.item.runUnderCursor", "enter"},
-		stringConfigItem{"keybindings.item.addToChain", "a"},
+		stringConfigItem{"keybindings.item.run_under_cursor", "enter"},
+		stringConfigItem{"keybindings.item.add_to_chain", "a"},
 	},
 	scriptBindingsConfig{
-		stringConfigItem{"keybindings.script.addArgsAndRun", "space"},
-		stringConfigItem{"keybindings.script.addArgsThenAddToChain", "A"},
-		stringConfigItem{"keybindings.script.removeFromChain", "s"},
+		stringConfigItem{"keybindings.script.add_args_and_run", "space"},
+		stringConfigItem{"keybindings.script.add_args_then_add_to_chain", "A"},
+		stringConfigItem{"keybindings.script.remove_from_chain", "s"},
 	},
 	chainBindingsConfig{
-		stringConfigItem{"keybindings.chain.runChain", "R"},
-		stringConfigItem{"keybindings.chain.loadKnown", "L"},
-		stringConfigItem{"keybindings.chain.loadUnderCursor", "l"},
-		stringConfigItem{"keybindings.chain.deleteUnderCursor", "D"},
+		stringConfigItem{"keybindings.chain.run_chain", "R"},
+		stringConfigItem{"keybindings.chain.load_known", "L"},
+		stringConfigItem{"keybindings.chain.load_under_cursor", "l"},
+		stringConfigItem{"keybindings.chain.delete_under_cursor", "D"},
 		stringConfigItem{"keybindings.chain.write", "W"},
 	},
 	editBindingsConfig{
-		stringConfigItem{"keybindings.edit.openStdout", "v"},
-		stringConfigItem{"keybindings.edit.openNvim", "n"},
-		stringConfigItem{"keybindings.edit.openConfig", "C"},
-		stringConfigItem{"keybindings.edit.openItemUnderCursor", "e"},
+		stringConfigItem{"keybindings.edit.open_stdout", "v"},
+		stringConfigItem{"keybindings.edit.open_nvim", "n"},
+		stringConfigItem{"keybindings.edit.open_config", "C"},
+		stringConfigItem{"keybindings.edit.open_item_under_cursor", "e"},
 	},
-	stringConfigItem{"keybindings.clearState", "c"},
-	stringConfigItem{"keybindings.writeConfig", "U"},
-	stringConfigItem{"keybindings.refreshView", "r"},
+	stringConfigItem{"keybindings.clear_state", "c"},
+	stringConfigItem{"keybindings.write_config", "U"},
+	stringConfigItem{"keybindings.refresh_view", "r"},
 	stringConfigItem{"keybindings.debug", "d"},
 }
 
-var ClearChainAfterRun = boolConfigItem{"clearChainAfterRun", false}
+var ClearChainAfterRun = boolConfigItem{"clear_chain_after_run", false}
 var Autosave = boolConfigItem{"autosave", true}
 
 var path string = os.Getenv("HOME")
 var PathConfig = pathConfig{
-	stringConfigItem{"paths.launcherDir", path + "/.launcher/"},
-	stringConfigItem{"paths.scriptDir", path + "/.scripts/launcherScripts/"},
+	stringConfigItem{"paths.launcher_dir", path + "/.launcher/"},
+	stringConfigItem{"paths.script_dir", path + "/.scripts/launcherScripts/"},
 }
 
 var ItemDescriptionConfig = itemDescriptionConfig{
-	boolConfigItem{"item_Description.useAndInDescription", false},
-	stringConfigItem{"item_Description.chainSeparator", ", "},
-	stringConfigItem{"item_Description.chainTotalSeparator", " of "},
+	boolConfigItem{"item_description.use_and_in_description", false},
+	stringConfigItem{"item_description.chain_separator", ", "},
+	stringConfigItem{"item_description.chain_total_separator", " of "},
 }
 
 var ColorConfig = colorConfig{
-	stringConfigItem{"colors.scriptTitle", "#3300cc"},
-	stringConfigItem{"colors.chainTitle", "#c60062"},
-	stringConfigItem{"colors.inputTitle", "#e64d00"},
+	stringConfigItem{"colors.script_title", "#3300cc"},
+	stringConfigItem{"colors.chain_title", "#c60062"},
+	stringConfigItem{"colors.input_title", "#e64d00"},
 	stringConfigItem{"colors.cursor", "#6fe6fc"},
-	stringConfigItem{"colors.selectedScript", "#6fe600"},
+	stringConfigItem{"colors.selected_script", "#6fe600"},
 }
