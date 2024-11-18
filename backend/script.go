@@ -28,7 +28,7 @@ func GetStructure(path string) []Script {
 
 func GetScriptFromCommand(command string) Script {
 	scriptName, argsString, found := strings.Cut(command, " ")
-	name := C.INPUT_SCRIPT_NAME
+	name := C.INPUT_COMMAND_NAME
 
 	if found && len(argsString) != 0 {
 		return Script{Name: name, Command: scriptName, Args: resolveArgsString(argsString)}

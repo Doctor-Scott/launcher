@@ -110,8 +110,8 @@ var Autosave = boolConfigItem{"autosave", true}
 
 var path string = os.Getenv("HOME")
 var PathConfig = pathConfig{
-	stringConfigItem{"paths.launcher_dir", path + "/.launcher/"},
-	stringConfigItem{"paths.script_dir", path + "/.scripts/launcherScripts/"},
+	stringConfigItem{"paths.launcher_dir", path + "/.launcher"},
+	stringConfigItem{"paths.script_dir", path + "/.scripts/launcherScripts"},
 }
 
 var SelectedScriptDescriptionConfig = itemDescriptionConfig{

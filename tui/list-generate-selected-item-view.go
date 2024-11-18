@@ -41,7 +41,7 @@ func deselectItem(item item) item {
 	if item.title != "Input" {
 		item.desc = ""
 	} else {
-		item.desc = C.INPUT_SCRIPT_DESC
+		item.desc = C.INPUT_COMMAND_DESC
 	}
 	return item
 

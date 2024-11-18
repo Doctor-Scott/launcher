@@ -46,7 +46,7 @@ func createScriptList(path string) list.Model {
 	structure := backend.GetStructure(path)
 	items := []list.Item{}
 
-	items = append(items, item{title: "Input", desc: C.INPUT_SCRIPT_DESC, script: backend.Script{Name: C.INPUT_SCRIPT_NAME}})
+	items = append(items, item{title: "Input", desc: C.INPUT_COMMAND_DESC, script: backend.Script{Name: C.INPUT_COMMAND_NAME}})
 	for _, script := range structure {
 		items = append(items, item{title: script.Name, script: script})
 	}
