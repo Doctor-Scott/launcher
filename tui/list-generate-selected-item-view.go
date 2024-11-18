@@ -1,8 +1,8 @@
 package tui
 
 import (
-	backend "launcher/backend"
-	C "launcher/globalConstants"
+	backend "github.com/Doctor-Scott/launcher/backend"
+	C "github.com/Doctor-Scott/launcher/globalConstants"
 	"strconv"
 
 	"github.com/spf13/viper"

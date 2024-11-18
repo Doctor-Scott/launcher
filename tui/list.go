@@ -1,10 +1,10 @@
 package tui
 
 import (
+	backend "github.com/Doctor-Scott/launcher/backend"
+	C "github.com/Doctor-Scott/launcher/globalConstants"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/viper"
-	backend "launcher/backend"
-	C "launcher/globalConstants"
 )
 
 type item struct {

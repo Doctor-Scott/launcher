@@ -2,8 +2,8 @@ package tui
 
 import (
 	"fmt"
-	backend "launcher/backend"
-	C "launcher/globalConstants"
+	backend "github.com/Doctor-Scott/launcher/backend"
+	C "github.com/Doctor-Scott/launcher/globalConstants"
 	"os"
 
 	"github.com/charmbracelet/bubbles/list"

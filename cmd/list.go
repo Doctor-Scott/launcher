@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/Doctor-Scott/launcher/backend"
 	"github.com/spf13/cobra"
-	"launcher/backend"
 )
 
 // listCmd represents the list command

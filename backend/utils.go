@@ -6,8 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
+	C "github.com/Doctor-Scott/launcher/globalConstants"
 	"github.com/spf13/viper"
-	C "launcher/globalConstants"
 )
 
 func ResolvePath(path string) string {

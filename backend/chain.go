@@ -1,7 +1,7 @@
 package backend
 
 import (
-	C "launcher/globalConstants"
+	C "github.com/Doctor-Scott/launcher/globalConstants"
 	"log"
 	"strings"
 

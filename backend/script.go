@@ -3,7 +3,7 @@ package backend
 import (
 	"bytes"
 	"fmt"
-	C "launcher/globalConstants"
+	C "github.com/Doctor-Scott/launcher/globalConstants"
 	"os"
 	"os/exec"
 	"strings"

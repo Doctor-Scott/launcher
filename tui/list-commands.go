@@ -3,8 +3,8 @@ package tui
 import (
 	"bytes"
 	"fmt"
-	backend "launcher/backend"
-	C "launcher/globalConstants"
+	backend "github.com/Doctor-Scott/launcher/backend"
+	C "github.com/Doctor-Scott/launcher/globalConstants"
 	"os"
 	"os/exec"
 

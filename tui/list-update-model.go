@@ -1,8 +1,8 @@
 package tui
 
 import (
-	backend "launcher/backend"
-	C "launcher/globalConstants"
+	backend "github.com/Doctor-Scott/launcher/backend"
+	C "github.com/Doctor-Scott/launcher/globalConstants"
 
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"

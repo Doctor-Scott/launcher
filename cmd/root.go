@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	C "launcher/globalConstants"
-	"launcher/tui"
+	C "github.com/Doctor-Scott/launcher/globalConstants"
+	"github.com/Doctor-Scott/launcher/tui"
 	"os"
 
 	"github.com/spf13/cobra"

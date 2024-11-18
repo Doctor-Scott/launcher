@@ -1,6 +1,6 @@
 package main
 
-import "launcher/cmd"
+import "github.com/Doctor-Scott/launcher/cmd"
 
 func main() {
 	cmd.Execute()
