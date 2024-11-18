@@ -80,7 +80,7 @@ func initConfig() {
 	viper.SetDefault(C.KeybindingConfig.Chain.LoadUnderCursor.Name, C.KeybindingConfig.Chain.LoadUnderCursor.DefaultValue)
 	viper.SetDefault(C.KeybindingConfig.Chain.Write.Name, C.KeybindingConfig.Chain.Write.DefaultValue)
 	viper.SetDefault(C.KeybindingConfig.Edit.OpenStdout.Name, C.KeybindingConfig.Edit.OpenStdout.DefaultValue)
-	viper.SetDefault(C.KeybindingConfig.Edit.OpenNvim.Name, C.KeybindingConfig.Edit.OpenNvim.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.Edit.OpenEditor.Name, C.KeybindingConfig.Edit.OpenEditor.DefaultValue)
 	viper.SetDefault(C.KeybindingConfig.Edit.OpenConfig.Name, C.KeybindingConfig.Edit.OpenConfig.DefaultValue)
 	viper.SetDefault(C.KeybindingConfig.Edit.OpenItemUnderCursor.Name, C.KeybindingConfig.Edit.OpenItemUnderCursor.DefaultValue)
 	viper.SetDefault(C.KeybindingConfig.ClearState.Name, C.KeybindingConfig.ClearState.DefaultValue)

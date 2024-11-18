@@ -49,7 +49,7 @@ type chainBindingsConfig struct {
 
 type editBindingsConfig struct {
 	OpenStdout          stringConfigItem
-	OpenNvim            stringConfigItem
+	OpenEditor          stringConfigItem
 	OpenConfig          stringConfigItem
 	OpenItemUnderCursor stringConfigItem
 }
@@ -94,7 +94,7 @@ var KeybindingConfig = keybindingConfig{
 	},
 	editBindingsConfig{
 		stringConfigItem{"keybindings.edit.open_stdout", "v"},
-		stringConfigItem{"keybindings.edit.open_nvim", "n"},
+		stringConfigItem{"keybindings.edit.open_editor", "n"},
 		stringConfigItem{"keybindings.edit.open_config", "C"},
 		stringConfigItem{"keybindings.edit.open_item_under_cursor", "e"},
 	},

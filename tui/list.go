@@ -73,8 +73,8 @@ func chainsUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == viper.GetString(C.KeybindingConfig.Chain.LoadKnown.Name) {
 			return loadChain(m)
 		}
-		if msg.String() == viper.GetString(C.KeybindingConfig.Edit.OpenNvim.Name) {
-			return openNvimInLauncherDirectory(m)
+		if msg.String() == viper.GetString(C.KeybindingConfig.Edit.OpenEditor.Name) {
+			return openEditorInLauncherDirectory(m)
 		}
 		if msg.String() == viper.GetString(C.KeybindingConfig.RefreshView.Name) {
 			return refreshView(m)
@@ -150,8 +150,8 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == viper.GetString(C.KeybindingConfig.Chain.LoadKnown.Name) {
 			return loadChain(m)
 		}
-		if msg.String() == viper.GetString(C.KeybindingConfig.Edit.OpenNvim.Name) {
-			return openNvimInLauncherDirectory(m)
+		if msg.String() == viper.GetString(C.KeybindingConfig.Edit.OpenEditor.Name) {
+			return openEditorInLauncherDirectory(m)
 		}
 		if msg.String() == viper.GetString(C.KeybindingConfig.RefreshView.Name) {
 			return refreshView(m)

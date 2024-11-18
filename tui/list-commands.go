@@ -84,7 +84,8 @@ func editItemUnderCursor(m model, itemType string) (tea.Model, tea.Cmd) {
 			pathToChain = m.list.SelectedItem().(item).script.Command
 		}
 
-		cmd := exec.Command("nvim", pathToChain)
+		editor := os.ExpandEnv("$EDITOR")
+		cmd := exec.Command(editor, pathToChain)
 		return m, tea.ExecProcess(cmd, func(err error) tea.Msg {
 			if err != nil {
 				return fmt.Errorf("failed to run : %w", err)
@@ -102,8 +103,10 @@ func deleteChainUnderCursor(m model) (tea.Model, tea.Cmd) {
 	return m, func() tea.Msg { return updateStructureMsg(true) }
 }
 
-func openNvimInLauncherDirectory(m model) (tea.Model, tea.Cmd) {
-	cmd := exec.Command("nvim", "--cmd", "cd"+m.currentPath+" | enew")
+func openEditorInLauncherDirectory(m model) (tea.Model, tea.Cmd) {
+	editor := os.ExpandEnv("$EDITOR")
+	//WARN  Not sure if this works for all editors
+	cmd := exec.Command(editor, "--cmd", "cd"+m.currentPath+" | enew")
 	m.list.ResetSelected()
 
 	return m, tea.ExecProcess(cmd, func(err error) tea.Msg {
@@ -116,7 +119,8 @@ func openNvimInLauncherDirectory(m model) (tea.Model, tea.Cmd) {
 
 func openConfig(m model) (tea.Model, tea.Cmd) {
 	configFile := viper.ConfigFileUsed()
-	cmd := exec.Command("nvim", configFile)
+	editor := os.ExpandEnv("$EDITOR")
+	cmd := exec.Command(editor, configFile)
 	// m.list.ResetSelected()
 	// fmt.Println(configFile)
 	// return m, nil
