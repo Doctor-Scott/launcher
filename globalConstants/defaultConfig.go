@@ -19,6 +19,7 @@ type itemDescriptionConfig struct {
 	UseAnd              boolConfigItem
 	ChainSeparator      stringConfigItem
 	ChainTotalSeparator stringConfigItem
+	Prefix              stringConfigItem
 }
 type colorConfig struct {
 	ScriptTitle    stringConfigItem
@@ -113,10 +114,11 @@ var PathConfig = pathConfig{
 	stringConfigItem{"paths.script_dir", path + "/.scripts/launcherScripts/"},
 }
 
-var ItemDescriptionConfig = itemDescriptionConfig{
-	boolConfigItem{"item_description.use_and_in_description", false},
-	stringConfigItem{"item_description.chain_separator", ", "},
-	stringConfigItem{"item_description.chain_total_separator", " of "},
+var SelectedScriptDescriptionConfig = itemDescriptionConfig{
+	boolConfigItem{"selected_script_description.use_and_in_description", false},
+	stringConfigItem{"selected_script_description.chain_separator", ", "},
+	stringConfigItem{"selected_script_description.chain_total_separator", " of "},
+	stringConfigItem{"selected_script_description.prefix", "Position: "},
 }
 
 var ColorConfig = colorConfig{

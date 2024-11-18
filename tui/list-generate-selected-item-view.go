@@ -67,7 +67,7 @@ func findScriptIndexes(chain backend.Chain, script backend.Script) []int {
 }
 
 func generatePositionString(indexes []int, chainLength int) string {
-	separator := viper.GetString(C.ItemDescriptionConfig.ChainSeparator.Name)
+	separator := viper.GetString(C.SelectedScriptDescriptionConfig.ChainSeparator.Name)
 	desc := "Position: " + strconv.Itoa(indexes[0]+1)
 	if len(indexes) != 1 {
 
@@ -75,7 +75,7 @@ func generatePositionString(indexes []int, chainLength int) string {
 			if i == 0 {
 				continue
 			}
-			if viper.GetBool(C.ItemDescriptionConfig.UseAnd.Name) {
+			if viper.GetBool(C.SelectedScriptDescriptionConfig.UseAnd.Name) {
 				if i != len(indexes)-1 {
 					desc += separator
 				} else {
@@ -88,7 +88,7 @@ func generatePositionString(indexes []int, chainLength int) string {
 			desc += strconv.Itoa(index + 1)
 		}
 	}
-	desc += viper.GetString(C.ItemDescriptionConfig.ChainTotalSeparator.Name) + strconv.Itoa(chainLength)
+	desc += viper.GetString(C.SelectedScriptDescriptionConfig.ChainTotalSeparator.Name) + strconv.Itoa(chainLength)
 	return desc
 
 }

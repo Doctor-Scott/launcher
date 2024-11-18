@@ -53,19 +53,24 @@ func init() {
 	rootCmd.PersistentFlags().StringP("path", "p", "", "optional path")
 }
 
-// initConfig reads in config file and ENV variables if set.
-func initConfig() {
+func setDefaults() {
 	viper.SetDefault(C.ClearChainAfterRun.Name, C.ClearChainAfterRun.DefaultValue)
 	viper.SetDefault(C.Autosave.Name, C.Autosave.DefaultValue)
+
+	//colors
 	viper.SetDefault(C.ColorConfig.ScriptTitle.Name, C.ColorConfig.ScriptTitle.DefaultValue)
 	viper.SetDefault(C.ColorConfig.ChainTitle.Name, C.ColorConfig.ChainTitle.DefaultValue)
 	viper.SetDefault(C.ColorConfig.InputTitle.Name, C.ColorConfig.InputTitle.DefaultValue)
 	viper.SetDefault(C.ColorConfig.Cursor.Name, C.ColorConfig.Cursor.DefaultValue)
 	viper.SetDefault(C.ColorConfig.SelectedScript.Name, C.ColorConfig.SelectedScript.DefaultValue)
-	viper.SetDefault(C.ItemDescriptionConfig.UseAnd.Name, C.ItemDescriptionConfig.UseAnd.DefaultValue)
-	viper.SetDefault(C.ItemDescriptionConfig.ChainSeparator.Name, C.ItemDescriptionConfig.ChainSeparator.DefaultValue)
-	viper.SetDefault(C.ItemDescriptionConfig.ChainTotalSeparator.Name, C.ItemDescriptionConfig.ChainTotalSeparator.DefaultValue)
 
+	//selected script description
+	viper.SetDefault(C.SelectedScriptDescriptionConfig.UseAnd.Name, C.SelectedScriptDescriptionConfig.UseAnd.DefaultValue)
+	viper.SetDefault(C.SelectedScriptDescriptionConfig.ChainSeparator.Name, C.SelectedScriptDescriptionConfig.ChainSeparator.DefaultValue)
+	viper.SetDefault(C.SelectedScriptDescriptionConfig.ChainTotalSeparator.Name, C.SelectedScriptDescriptionConfig.ChainTotalSeparator.DefaultValue)
+	viper.SetDefault(C.SelectedScriptDescriptionConfig.Prefix.Name, C.SelectedScriptDescriptionConfig.Prefix.DefaultValue)
+
+	//paths
 	viper.SetDefault(C.PathConfig.LauncherDir.Name, C.PathConfig.LauncherDir.DefaultValue)
 	viper.SetDefault(C.PathConfig.ScriptDir.Name, C.PathConfig.ScriptDir.DefaultValue)
 
@@ -87,6 +92,11 @@ func initConfig() {
 	viper.SetDefault(C.KeybindingConfig.WriteConfig.Name, C.KeybindingConfig.WriteConfig.DefaultValue)
 	viper.SetDefault(C.KeybindingConfig.RefreshView.Name, C.KeybindingConfig.RefreshView.DefaultValue)
 	viper.SetDefault(C.KeybindingConfig.Debug.Name, C.KeybindingConfig.Debug.DefaultValue)
+}
+
+// initConfig reads in config file and ENV variables if set.
+func initConfig() {
+	setDefaults()
 
 	viper.SetConfigName("launcher")
 	viper.SetConfigType("toml")
@@ -95,7 +105,7 @@ func initConfig() {
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
-	} else if viperEnvConfigPath := os.Getenv("VIPER_CONFIG_PATH"); viperEnvConfigPath == "" {
+	} else if viperEnvConfigPath := os.Getenv("LAUNCHER_CONFIG_PATH"); viperEnvConfigPath == "" {
 		// Use config file from $ENV
 
 		home, err := os.UserHomeDir()
