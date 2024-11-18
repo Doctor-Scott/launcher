@@ -56,7 +56,7 @@ The chain is run sequentially, with the output of each script being passed to th
 #### Contribute a workflow!
 Got a workflow you think is pretty neat or does something cool?
 
-Check the contributions section of this `README` to get it added to the community submissions!
+Check [contributing](CONTRIBUTING.md) to get it added to the community submissions!
 
 >Or just print it out and staple it to your wall, you should be proud of that one!
 
@@ -185,19 +185,7 @@ use_and_in_description = false
 
 
 ## Contributing
-
-If you'd like to contribute, create a pull request. You can also open an issue for any bugs or feature requests.
-
-The repo has a .githook/ folder for the pre-commit hooks, these run the tests before a commit
-
->This is a good idea to do if you don't want to break things too badly
-```sh
-git config core.hooksPath .githooks
-chmod +x .githooks/pre-commit      
-```
-
-### Workflows
-Contribute a saved workflow by adding the created `json` file to the `workflows/community` directory
+Check [contributing](CONTRIBUTING.md) for more details
 
 ## TODOs
 - Add more commands, like running a workflow as a command!
