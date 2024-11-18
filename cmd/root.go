@@ -14,15 +14,14 @@ var cfgFile string
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "launcher",
-	Short: "A script launch pad",
-	Long:  `This app works like a homepage for your scripts`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
+	Short: "Script launcher",
+	Long:  `A homepage TUI and runner for your scripts, build complex workflows with ease!`,
 	Run: func(cmd *cobra.Command, args []string) {
 		path, _ := cmd.Flags().GetString("path")
 		// for flag := range flags {
 		//
 		// }
+		//TODO Add a create default config command
 
 		tui.Start(path)
 	},
