@@ -82,6 +82,7 @@ func setDefaults() {
 	viper.SetDefault(C.KeybindingConfig.Chain.RunChain.Name, C.KeybindingConfig.Chain.RunChain.DefaultValue)
 	viper.SetDefault(C.KeybindingConfig.Chain.LoadKnown.Name, C.KeybindingConfig.Chain.LoadKnown.DefaultValue)
 	viper.SetDefault(C.KeybindingConfig.Chain.LoadUnderCursor.Name, C.KeybindingConfig.Chain.LoadUnderCursor.DefaultValue)
+	viper.SetDefault(C.KeybindingConfig.Chain.DeleteUnderCursor.Name, C.KeybindingConfig.Chain.DeleteUnderCursor.DefaultValue)
 	viper.SetDefault(C.KeybindingConfig.Chain.Write.Name, C.KeybindingConfig.Chain.Write.DefaultValue)
 	viper.SetDefault(C.KeybindingConfig.Edit.OpenStdout.Name, C.KeybindingConfig.Edit.OpenStdout.DefaultValue)
 	viper.SetDefault(C.KeybindingConfig.Edit.OpenEditor.Name, C.KeybindingConfig.Edit.OpenEditor.DefaultValue)
