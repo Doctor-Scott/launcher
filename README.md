@@ -125,6 +125,8 @@ Useful when you have multiple directories with scripts
 
 You can configure the launcher by creating a `launcher.toml` file in your .config directory in your $HOME path.
 
+Or if there is a `launcher.toml` file in the current directory, it will be used instead.
+
 This can be changed with the `LAUNCHER_CONFIG_PATH` environment variable.
 
 ### Default configuration

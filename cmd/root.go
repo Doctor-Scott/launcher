@@ -101,7 +101,7 @@ func initConfig() {
 	viper.SetConfigName("launcher")
 	viper.SetConfigType("toml")
 	viper.AutomaticEnv() // read in environment variables that match
-
+	viper.AddConfigPath(".")
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
