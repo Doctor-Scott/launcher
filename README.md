@@ -19,7 +19,7 @@ But a workflow is probably something you would want to save and load for reuse a
 ```
 
 ---
-This idea came to me when I realised that most of the scripts or commands I use are POSIX complaint
+This idea came to me when I realised that most of the scripts or commands I use are POSIX compliant
 
 We can think of these like modules or functions in a system, pieces of code that can be combined in many different and useful ways.
 
