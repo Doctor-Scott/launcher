@@ -1,5 +1,10 @@
 # Launcher
 A script launch pad, written in Go! 
+<p float="middle">
+    <img src="./demo/screenshots/script_view.png" alt="script_view" width="250"/>
+    <img src="./demo/screenshots/chain_view.png" alt="script_view" width="250"/>
+    <img src="./demo/screenshots/workflow_view.png" alt="script_view" width="250"/>
+</p>
 
 ## Description
 A homepage TUI and runner for your scripts, build complex workflows with ease!
@@ -7,7 +12,6 @@ A homepage TUI and runner for your scripts, build complex workflows with ease!
 Launcher allows you to run scripts and commands on your machine or join them together to make chains!
 
 These chains can be thought of as workflows, and can be saved and loaded for easy access.
-
 
 ```
 Within the code and config `chains` and `workflows` are used interchangeably. 
@@ -45,6 +49,8 @@ Building it seemed like a fun challenge too!
 
 
 ### Workflows:
+<img src="./demo/screenshots/workflow_view.png" alt="script_view" width="400"/>
+
 These are the core concept of the launcher, they are saved as `json` files in the `launcher_dir/custom` directory.
 
 These can be loaded and run as a chain, or run individually.
@@ -92,6 +98,7 @@ This will open the main interface
 This has 2 views, scripts and workflows, use the `tab` key to switch between them
 
 #### Scripts View
+
 Run scripts within the script path, the default path for these scripts can be found in the config
 > currently does not work with nested directories
 
@@ -99,28 +106,74 @@ You can also select the `Input` box, and enter a command to run or chain
 
 You can view and edit the underlying file for a script in the list with the `open_item_under_cursor` keybind
 
+---
+<details>
+    <summary>Scripts example (click to expand)</summary>
+<img src="./demo/scripts.gif" alt="script_view" width="600"/>
+</details>
+
+---
+
+#### Chaining the scripts
+Chain scripts together to create workflows
+
+---
+<details>
+    <summary>Chain example (click to expand)</summary>
+<img src="./demo/chains.gif" alt="chain_view" width="600"/>
+</details>
+
+---
 #### Workflows View
 A list of saved workflows, these can be added to the chain, or run individually
 
 You can view and edit the underlying `json` for a workflow with the `open_item_under_cursor` keybind
 
+---
+<details>
+    <summary>Workflow example (click to expand)</summary>
+<img src="./demo/workflows.gif" alt="workflow_view" width="600"/>
+</details>
+
+---
+
 ### The Commands
 >For a full list of commands, run `launcher --help`
 
 #### Arguments
-Launcher has a number (1) optional args that can be used to interact with the tool.
+Launcher has a number (1 is still a number) of optional args that can be used to interact with the tool.
 
 E.g. List scripts in the script path:
 ```sh
 launcher list
 ```
->There aren't actually that many right now, but I want to add more, like running a workflow as a command!
+>I want to add more, like running a workflow as a command!
 
 #### Flags
 Use `launcher -p <path>` to change the path the launcher uses for scripts
 
 Useful when you have multiple directories with scripts
 > These should still all work when added to workflows, as the launcher will resolve the full path to the script
+
+## Examples
+<details>
+    <summary>Scripts</summary>
+<img src="./demo/scripts.gif" alt="script_view" width="600"/>
+</details>
+
+---
+<details>
+    <summary>Chains</summary>
+<img src="./demo/chains.gif" alt="chain_view" width="600"/>
+</details>
+
+---
+<details>
+    <summary>Workflows</summary>
+<img src="./demo/workflows.gif" alt="workflow_view" width="600"/>
+</details>
+
+---
 
 ## Configuration
 
