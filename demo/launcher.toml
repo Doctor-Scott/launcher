@@ -1,0 +1,5 @@
+autosave = false
+
+[paths]
+launcher_dir = './'
+script_dir = './scripts/'
