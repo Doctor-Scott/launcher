@@ -73,6 +73,7 @@ Check [contributing](CONTRIBUTING.md) to get it added to the community submissio
 
     > Might work with older versions but I've not tested that.
 - vipe, for viewing and editing the stdout of scripts in your `$EDITOR` 
+    - [From the moreutils package](https://joeyh.name/code/moreutils/)
     >I thought about making this part myself, but this does the job so well already
 
 ## Installation
