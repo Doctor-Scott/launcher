@@ -41,6 +41,7 @@ Building it seemed like a fun challenge too!
     - You could also save them to file, anything you can do in your editor really
 - Pipe command outputs into the launcher for further use -- e.g. `echo hello | launcher`
 - Edit the script and workflow files in your $EDITOR of choice from within the launcher
+    - You might also need to set $VISUAL to your editor of choice
 
 
 ### Workflows:
@@ -88,7 +89,7 @@ The entry point for the launcher is the `launcher` command. (who would have gues
 
 This will open the main interface
 
-This has 2 views, scripts and workflows
+This has 2 views, scripts and workflows, use the `tab` key to switch between them
 
 #### Scripts View
 Run scripts within the script path, the default path for these scripts can be found in the config
