@@ -68,7 +68,7 @@ func findScriptIndexes(chain backend.Chain, script backend.Script) []int {
 
 func generatePositionString(indexes []int, chainLength int) string {
 	separator := viper.GetString(C.SelectedScriptDescriptionConfig.ChainSeparator.Name)
-	desc := "Position: " + strconv.Itoa(indexes[0]+1)
+	desc := viper.GetString(C.SelectedScriptDescriptionConfig.Prefix.Name) + strconv.Itoa(indexes[0]+1)
 	if len(indexes) != 1 {
 
 		for i, index := range indexes {
