@@ -28,6 +28,19 @@ func generateSelectedItemView(m model) model {
 	return m
 }
 
+func generateFailedItemView(m model) model {
+	for i, listItem := range m.list.Items() {
+		if item, ok := listItem.(item); ok {
+			if item.script.Name == m.lastFaildScriptName {
+				item.failed = true
+				m.list.SetItem(i, item)
+			}
+		}
+	}
+
+	return m
+}
+
 func selectItem(m model, item item) item {
 	item.selected = true
 	indexes := findScriptIndexes(m.chain, item.script)
@@ -91,4 +104,15 @@ func generatePositionString(indexes []int, chainLength int) string {
 	desc += viper.GetString(C.SelectedScriptDescriptionConfig.ChainTotalSeparator.Name) + strconv.Itoa(chainLength)
 	return desc
 
+}
+
+func maybeSetLastFailedScript(m model, scriptResult backend.ScriptResult) model {
+	if !scriptResult.Success {
+		m.lastFaildScriptName = scriptResult.Script.Name
+		m = generateFailedItemView(m)
+
+		return m
+	}
+	m.lastFaildScriptName = ""
+	return m
 }

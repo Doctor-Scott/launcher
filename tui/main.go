@@ -15,12 +15,13 @@ import (
 var docStyle = lipgloss.NewStyle().Margin(1, 2)
 
 type model struct {
-	list        list.Model
-	stdout      []byte
-	currentPath string
-	chain       backend.Chain
-	currentView string
-	inputModel  inputModel
+	list                list.Model
+	stdout              []byte
+	currentPath         string
+	chain               backend.Chain
+	currentView         string
+	inputModel          inputModel
+	lastFaildScriptName string
 }
 
 func (m model) Init() tea.Cmd {
@@ -41,13 +42,17 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case C.RUN_SCRIPT:
 			command := m.inputModel.textInput.Value()
 			if command != "" {
-				m.stdout = backend.RunKnownScript(command, m.stdout)
+				scriptResult := backend.RunKnownScript(command, m.stdout)
+				//TODO  maybe have m hold a ChainResult?
+				m.stdout = scriptResult.Stdout
 			}
 		case C.ADD_ARGS_TO_SCRIPT_AND_RUN:
 			scriptArgs := m.inputModel.textInput.Value()
 			script := backend.AddArgsToScript(m.list.SelectedItem().(item).script, scriptArgs)
 
-			m.stdout = backend.RunScript(script, m.stdout)
+			scriptResult := backend.RunScript(script, m.stdout)
+			m.stdout = scriptResult.Stdout
+			m = maybeSetLastFailedScript(m, scriptResult)
 		case C.ADD_SCRIPT_TO_CHAIN:
 			command := m.inputModel.textInput.Value()
 			if command != "" {

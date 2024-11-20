@@ -15,6 +15,14 @@ type Script struct {
 	Args    []string
 }
 
+type ScriptResult struct {
+	Script Script
+	//TODO  use the exit code to determine success
+	Success bool
+	Stdout  []byte
+	Stderr  error
+}
+
 func GetStructure(path string) []Script {
 	path = ResolvePath(path)
 
@@ -102,7 +110,7 @@ func AddArgsToScript(script Script, argsString string) Script {
 	return script
 }
 
-func RunScript(script Script, stdin []byte) []byte {
+func RunScript(script Script, stdin []byte) ScriptResult {
 	cmd := exec.Command(script.Command, script.Args...)
 
 	if len(stdin) > 0 {
@@ -112,12 +120,13 @@ func RunScript(script Script, stdin []byte) []byte {
 
 	stdout, err := cmd.CombinedOutput()
 	saveStdout(stdout)
-	if err != nil {
+	success := err == nil
+	if !success {
 		fmt.Println(err)
 	}
-	return stdout
+	return ScriptResult{Script: script, Success: success, Stdout: stdout, Stderr: err}
 }
 
-func RunKnownScript(command string, stdin []byte) []byte {
+func RunKnownScript(command string, stdin []byte) ScriptResult {
 	return RunScript(GetScriptFromCommand(command), stdin)
 }

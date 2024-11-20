@@ -12,20 +12,28 @@ import (
 	"github.com/spf13/viper"
 )
 
+func debugModel(m model) {
+	for _, item := range m.list.Items() {
+		fmt.Printf("%+v", item)
+		fmt.Printf("\n")
+
+	}
+
+}
 func debug(m model) (tea.Model, tea.Cmd) {
 	// fmt.Println(m.currentPath)
 	// fmt.Println("")
 	// fmt.Println(m.list.Items())
 	// fmt.Println("")
-	fmt.Println("")
+	debugModel(m)
+
 	// fmt.Println(m.chain)
 	// fmt.Println(string(m.stdout))
-	fmt.Println("")
 	// fmt.Print(m)
 
 	// fmt.Println(m.Items())
 
-	fmt.Print(viper.AllSettings())
+	// fmt.Print(viper.AllSettings())
 	return m, nil
 }
 
@@ -65,8 +73,12 @@ func refreshView(m model) (tea.Model, tea.Cmd) {
 }
 
 func runChain(m model) (tea.Model, tea.Cmd) {
-	stdout := backend.RunChain(m.stdout, m.chain)
-	m.stdout = stdout
+	chainResult := backend.RunChain(m.stdout, m.chain)
+	lastScriptResult := chainResult[len(chainResult)-1]
+	//TODO  here we should check if the last script failed
+
+	m.stdout = lastScriptResult.Stdout
+	m = maybeSetLastFailedScript(m, lastScriptResult)
 
 	if viper.GetBool(C.ClearChainAfterRun.Name) {
 		m.chain = backend.Chain{}
@@ -175,8 +187,12 @@ func clearState(m model) (tea.Model, tea.Cmd) {
 
 func runItemUnderCursor(m model, itemType string) (tea.Model, tea.Cmd) {
 	if itemType == "chain" {
-		stdout := backend.RunChain(m.stdout, m.list.SelectedItem().(item).chainItem.Chain)
-		m.stdout = stdout
+		chainResult := backend.RunChain(m.stdout, m.list.SelectedItem().(item).chainItem.Chain)
+		lastScriptResult := chainResult[len(chainResult)-1]
+
+		m.stdout = lastScriptResult.Stdout
+		m = maybeSetLastFailedScript(m, lastScriptResult)
+
 		cmd := func() tea.Msg {
 			return tea.ClearScreen()
 		}
@@ -189,8 +205,9 @@ func runItemUnderCursor(m model, itemType string) (tea.Model, tea.Cmd) {
 		m.currentView = "input"
 		return m, nil
 	} else {
-		stdout := backend.RunScript(m.list.SelectedItem().(item).script, m.stdout)
-		m.stdout = stdout
+		scriptResult := backend.RunScript(m.list.SelectedItem().(item).script, m.stdout)
+		m.stdout = scriptResult.Stdout
+		m = maybeSetLastFailedScript(m, scriptResult)
 		cmd := func() tea.Msg {
 			return tea.ClearScreen()
 		}

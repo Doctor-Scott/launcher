@@ -1,6 +1,7 @@
 package backend
 
 import (
+	// "fmt"
 	"os"
 	"reflect"
 	"testing"
@@ -40,10 +41,12 @@ func TestGetChainStructure(t *testing.T) {
 
 func TestRunChain(t *testing.T) {
 	tests := []struct {
-		name     string
-		chain    Chain
-		stdin    []byte
-		expected []byte
+		name                   string
+		chain                  Chain
+		stdin                  []byte
+		expectedStdout         []byte
+		expectedSuccess        bool
+		expectedLastScriptName string
 	}{
 		{
 			name: "simple chain with env var",
@@ -58,16 +61,31 @@ func TestRunChain(t *testing.T) {
 					Command: "cat",
 				},
 			},
-			stdin:    []byte{},
-			expected: []byte("hello world\n"),
-		}, {}}
+			stdin:                  []byte{},
+			expectedStdout:         []byte("hello world\n"),
+			expectedSuccess:        true,
+			expectedLastScriptName: "test-script2",
+		},
+	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := RunChain(tt.stdin, tt.chain)
-			if !reflect.DeepEqual(result, tt.expected) {
+			chainResult := RunChain(tt.stdin, tt.chain)
+			lastScriptResult := chainResult[(len(chainResult) - 1)]
+			result := lastScriptResult.Stdout
+			success := lastScriptResult.Success
+			lastScriptName := lastScriptResult.Script.Name
+			if !reflect.DeepEqual(result, tt.expectedStdout) {
 				t.Errorf("RunChain(%v, %v) = %v, want %v",
-					tt.stdin, tt.chain, result, tt.expected)
+					tt.stdin, tt.chain, result, tt.expectedStdout)
+			}
+			if success != tt.expectedSuccess {
+				t.Errorf("RunChain(%v, %v) expected success = %v, got %v",
+					tt.stdin, tt.chain, success, tt.expectedSuccess)
+			}
+			if lastScriptName != tt.expectedLastScriptName {
+				t.Errorf("RunChain(%v, %v) expected lastScriptName = %v, got %v",
+					tt.stdin, tt.chain, tt.expectedLastScriptName, lastScriptName)
 			}
 		})
 	}
@@ -79,24 +97,42 @@ func TestLoadChainThenRun(t *testing.T) {
 	testChainFileName := "test-chain"
 
 	tests := []struct {
-		name     string
-		expected []byte
-		stdin    []byte
+		name                   string
+		expectedStdout         []byte
+		expectedSuccess        bool
+		stdin                  []byte
+		expectedLastScriptName string
 	}{
 		{
-			name:     "test we get the chain structure",
-			expected: []byte("hello world\n"),
-			stdin:    []byte{},
+			name:                   "test we get the chain structure",
+			expectedStdout:         []byte("hello world\n"),
+			stdin:                  []byte{},
+			expectedSuccess:        true,
+			expectedLastScriptName: "command_two",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			chain := LoadCustomChain(testDir, testChainFileName)
-			result := RunChain(tt.stdin, chain)
-			if !reflect.DeepEqual(result, tt.expected) {
+			chainResult := RunChain(tt.stdin, chain)
+			lastScriptResult := chainResult[len(chainResult)-1]
+
+			result := lastScriptResult.Stdout
+			success := lastScriptResult.Success
+			lastScriptName := lastScriptResult.Script.Name
+
+			if !reflect.DeepEqual(result, tt.expectedStdout) {
 				t.Errorf("RunChain(%v, %v) = %v, want %v",
-					tt.stdin, chain, result, tt.expected)
+					tt.stdin, chain, result, tt.expectedStdout)
+			}
+			if success != tt.expectedSuccess {
+				t.Errorf("RunChain(%v, %v) expected success = %v, got %v",
+					tt.stdin, chain, success, tt.expectedSuccess)
+			}
+			if lastScriptName != tt.expectedLastScriptName {
+				t.Errorf("RunChain(%v, %v) expected lastScriptName = %v, got %v",
+					tt.stdin, chain, tt.expectedLastScriptName, lastScriptName)
 			}
 		})
 	}

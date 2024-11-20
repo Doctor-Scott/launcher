@@ -64,11 +64,12 @@ func TestRunScriptWithArgsString(t *testing.T) {
 	os.Setenv("TEST_VAR", "test-value")
 
 	tests := []struct {
-		name       string
-		script     Script
-		argsString string
-		stdin      []byte
-		expected   []byte
+		name            string
+		script          Script
+		argsString      string
+		stdin           []byte
+		expectedStdout  []byte
+		expectedSuccess bool
 	}{
 		{
 			name: "simple script",
@@ -76,9 +77,10 @@ func TestRunScriptWithArgsString(t *testing.T) {
 				Name:    "test-script",
 				Command: "echo",
 			},
-			argsString: "hello world",
-			stdin:      []byte{},
-			expected:   []byte("hello world\n"),
+			argsString:      "hello world",
+			stdin:           []byte{},
+			expectedStdout:  []byte("hello world\n"),
+			expectedSuccess: true,
 		},
 		{
 			name: "script with environment variable",
@@ -86,9 +88,10 @@ func TestRunScriptWithArgsString(t *testing.T) {
 				Name:    "test-script",
 				Command: "echo",
 			},
-			argsString: "$TEST_VAR",
-			stdin:      []byte{},
-			expected:   []byte("test-value\n"),
+			argsString:      "$TEST_VAR",
+			stdin:           []byte{},
+			expectedStdout:  []byte("test-value\n"),
+			expectedSuccess: true,
 		},
 		{
 			name: "script with quoted environment variable",
@@ -96,9 +99,10 @@ func TestRunScriptWithArgsString(t *testing.T) {
 				Name:    "test-script",
 				Command: "echo",
 			},
-			argsString: `"$TEST_VAR"`,
-			stdin:      []byte{},
-			expected:   []byte("test-value\n"),
+			argsString:      `"$TEST_VAR"`,
+			stdin:           []byte{},
+			expectedStdout:  []byte("test-value\n"),
+			expectedSuccess: true,
 		},
 		{
 			name: "script with unquoted environment variable",
@@ -106,19 +110,26 @@ func TestRunScriptWithArgsString(t *testing.T) {
 				Name:    "test-script",
 				Command: "echo",
 			},
-			argsString: "$TEST_VAR",
-			stdin:      []byte{},
-			expected:   []byte("test-value\n"),
+			argsString:      "$TEST_VAR",
+			stdin:           []byte{},
+			expectedStdout:  []byte("test-value\n"),
+			expectedSuccess: true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			script := AddArgsToScript(tt.script, tt.argsString)
-			result := RunScript(script, tt.stdin)
-			if !reflect.DeepEqual(result, tt.expected) {
+			scriptResult := RunScript(script, tt.stdin)
+			result := scriptResult.Stdout
+			success := scriptResult.Success
+			if !reflect.DeepEqual(result, tt.expectedStdout) {
 				t.Errorf("RunScript(%v, %v) = %v, want %v",
-					tt.script, tt.stdin, result, tt.expected)
+					tt.script, tt.stdin, result, tt.expectedStdout)
+			}
+			if !reflect.DeepEqual(success, tt.expectedSuccess) {
+				t.Errorf("RunScript(%v, %v) = %v, want %v",
+					tt.script, tt.stdin, success, tt.expectedSuccess)
 			}
 		})
 	}
@@ -128,67 +139,82 @@ func TestRunKnownScript(t *testing.T) {
 	// Set up test environment variable
 	os.Setenv("TEST_VAR", "test-value")
 	tests := []struct {
-		name     string
-		command  string
-		stdin    []byte
-		expected []byte
+		name            string
+		command         string
+		stdin           []byte
+		expectedStdout  []byte
+		expectedSuccess bool
 	}{
 		{
-			name:     "script with args",
-			command:  "echo hello world",
-			stdin:    []byte{},
-			expected: []byte("hello world\n"),
+			name:            "script with args",
+			command:         "echo hello world",
+			stdin:           []byte{},
+			expectedStdout:  []byte("hello world\n"),
+			expectedSuccess: true,
 		},
 		{
-			name:     "script with env var",
-			command:  "echo $TEST_VAR",
-			stdin:    []byte{},
-			expected: []byte("test-value\n"),
+			name:            "script with env var",
+			command:         "echo $TEST_VAR",
+			stdin:           []byte{},
+			expectedStdout:  []byte("test-value\n"),
+			expectedSuccess: true,
 		},
 		{
-			name:     "script with quoted env var",
-			command:  "echo \"$TEST_VAR\"",
-			stdin:    []byte{},
-			expected: []byte("test-value\n"),
+			name:            "script with quoted env var",
+			command:         "echo \"$TEST_VAR\"",
+			stdin:           []byte{},
+			expectedStdout:  []byte("test-value\n"),
+			expectedSuccess: true,
 		},
 		{
-			name:     "script with unquoted env var",
-			command:  "echo $TEST_VAR",
-			stdin:    []byte{},
-			expected: []byte("test-value\n"),
+			name:            "script with unquoted env var",
+			command:         "echo $TEST_VAR",
+			stdin:           []byte{},
+			expectedStdout:  []byte("test-value\n"),
+			expectedSuccess: true,
 		},
 		{
-			name:     "script with quoted args",
-			command:  "echo 'hello world'",
-			stdin:    []byte{},
-			expected: []byte("hello world\n"),
+			name:            "script with quoted args",
+			command:         "echo 'hello world'",
+			stdin:           []byte{},
+			expectedStdout:  []byte("hello world\n"),
+			expectedSuccess: true,
 		},
 		{
-			name:     "script with unquoted args",
-			command:  "echo hello world",
-			stdin:    []byte{},
-			expected: []byte("hello world\n"),
+			name:            "script with unquoted args",
+			command:         "echo hello world",
+			stdin:           []byte{},
+			expectedStdout:  []byte("hello world\n"),
+			expectedSuccess: true,
 		},
 		{
-			name:     "script with quoted and unquoted args",
-			command:  "echo 'hello world' $TEST_VAR",
-			stdin:    []byte{},
-			expected: []byte("hello world test-value\n"),
+			name:            "script with quoted and unquoted args",
+			command:         "echo 'hello world' $TEST_VAR",
+			stdin:           []byte{},
+			expectedStdout:  []byte("hello world test-value\n"),
+			expectedSuccess: true,
 		},
 		{
-			name:     "script with unquoted and quoted args",
-			command:  "echo hello world \"$TEST_VAR\"",
-			stdin:    []byte{},
-			expected: []byte("hello world test-value\n"),
+			name:            "script with unquoted and quoted args",
+			command:         "echo hello world \"$TEST_VAR\"",
+			stdin:           []byte{},
+			expectedStdout:  []byte("hello world test-value\n"),
+			expectedSuccess: true,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := RunKnownScript(tt.command, tt.stdin)
-			if !reflect.DeepEqual(result, tt.expected) {
+			scriptResult := RunKnownScript(tt.command, tt.stdin)
+			result := scriptResult.Stdout
+			success := scriptResult.Success
+			if !reflect.DeepEqual(result, tt.expectedStdout) {
 				t.Errorf("RunKnownScript(%v, %v) = %v, want %v",
-					tt.command, tt.stdin, result, tt.expected)
+					tt.command, tt.stdin, result, tt.expectedStdout)
+			}
+			if !reflect.DeepEqual(success, tt.expectedSuccess) {
+				t.Errorf("RunKnownScript(%v, %v) = %v, want %v",
+					tt.command, tt.stdin, success, tt.expectedSuccess)
 			}
 		})
 	}

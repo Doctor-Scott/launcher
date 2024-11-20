@@ -10,6 +10,8 @@ import (
 
 type Chain []Script
 
+type ChainResult []ScriptResult
+
 type ChainItem struct {
 	Name  string
 	Chain Chain
@@ -29,16 +31,26 @@ func GetChainStructure(path string) []ChainItem {
 	return chainItems
 }
 
-func RunChain(stdin []byte, chain Chain) []byte {
+func runChain(stdin []byte, chain Chain, scriptResults []ScriptResult) ChainResult {
+	if !(len(scriptResults) == 0) && !scriptResults[len(scriptResults)-1].Success {
+		// we stop after the first failure
+		return scriptResults
+	}
+
 	if len(chain) == 0 {
+		// finished chain
 		if viper.GetBool(C.ClearChainAfterRun.Name) {
+			// we save the empty chain here, so when it is read again it will be cleared
 			MaybeAutoSaveChain(chain)
 		}
-		return stdin
+		return scriptResults
 	}
-	stdout := RunScript(chain[0], stdin)
-	return RunChain(stdout, chain[1:])
+	scriptResult := RunScript(chain[0], stdin)
+	return runChain(scriptResult.Stdout, chain[1:], append(scriptResults, scriptResult))
+}
 
+func RunChain(stdin []byte, chain Chain) ChainResult {
+	return runChain(stdin, chain, []ScriptResult{})
 }
 
 func AddScriptToChain(scriptToAdd Script, chain Chain) Chain {

@@ -11,6 +11,7 @@ type item struct {
 	title, titlePretty, desc string
 	script                   backend.Script
 	selected                 bool
+	failed                   bool
 	focused                  bool
 	chainItem                backend.ChainItem
 }

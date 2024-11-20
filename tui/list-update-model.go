@@ -29,6 +29,11 @@ func getCustomDelegate() list.DefaultDelegate {
 				m.SetItem(i, item)
 
 			}
+
+			if item.failed {
+				item.titlePretty = lipgloss.NewStyle().Background(lipgloss.Color("#ff0000")).Render(item.title)
+				m.SetItem(i, item)
+			}
 		}
 
 		return nil
