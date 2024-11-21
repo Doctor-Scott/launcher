@@ -1,0 +1,1833 @@
+>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+────────────────────────────────────────────────────────────────────────────────
+>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+────────────────────────────────────────────────────────────────────────────────
+>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+────────────────────────────────────────────────────────────────────────────────
+> launcher
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+────────────────────────────────────────────────────────────────────────────────
+> launcher
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+────────────────────────────────────────────────────────────────────────────────
+> launcher
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+────────────────────────────────────────────────────────────────────────────────
+
+        Scripts
+
+    4 items
+
+  │ Input
+  │ Enter a command
+
+    capitalize.sh
+
+
+    duplicate_lines.sh
+
+
+    remove_vowels.sh
+
+
+
+
+
+
+    ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
+
+        Scripts
+
+    4 items
+
+  │ Input
+  │ Enter a command
+
+    capitalize.sh
+
+
+    duplicate_lines.sh
+
+
+    remove_vowels.sh
+
+
+
+
+
+
+    ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
+
+        Scripts
+
+    4 items
+
+  │ Input
+  │ Enter a command
+
+    capitalize.sh
+
+
+    duplicate_lines.sh
+
+
+    remove_vowels.sh
+
+
+
+
+
+
+    ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
+Script:
+
+>
+
+(esc to quit)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+────────────────────────────────────────────────────────────────────────────────
+Script:
+
+>
+
+(esc to quit)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+────────────────────────────────────────────────────────────────────────────────
+Script:
+
+> echo hello world!
+
+(esc to quit)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+────────────────────────────────────────────────────────────────────────────────
+Script:
+
+> echo hello world!
+
+(esc to quit)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+────────────────────────────────────────────────────────────────────────────────
+
+        Scripts
+
+    4 items
+
+  │ Input
+  │ Enter a command
+
+    capitalize.sh
+
+
+    duplicate_lines.sh
+
+
+    remove_vowels.sh
+
+
+
+
+
+
+    ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
+hello world!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+<folders/6y/f4v_wcxj2ws5678d7nwzz_180000gn/T/dCOOElZcnH" 1L, 13B
+────────────────────────────────────────────────────────────────────────────────
+hello world!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+<folders/6y/f4v_wcxj2ws5678d7nwzz_180000gn/T/dCOOElZcnH" 1L, 13B
+────────────────────────────────────────────────────────────────────────────────
+hello world!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+
+────────────────────────────────────────────────────────────────────────────────
+hello world!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+
+────────────────────────────────────────────────────────────────────────────────
+hello world!
+
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+hello world!
+
+
+
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+hello world!
+
+
+In our launcher buffer
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+hello world!
+
+
+In our launcher buffer
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+hello world!
+
+
+In our launcher buffer
+
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+hello world!
+
+
+In our launcher buffer
+We can view and edit the latest stdout
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+hello world!
+
+
+In our launcher buffer
+We can view and edit the latest stdout
+
+
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+hello world!
+
+
+In our launcher buffer
+We can view and edit the latest stdout
+
+
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+hello world!
+
+
+In our launcher buffer
+We can view and edit the latest stdout
+
+Let's do something with it!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+hello world!
+
+
+In our launcher buffer
+We can view and edit the latest stdout
+
+Let's do something with it!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+hello world!
+
+
+In our launcher buffer
+We can view and edit the latest stdout
+
+Let's do something with it!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+
+────────────────────────────────────────────────────────────────────────────────
+hello world!
+
+
+In our launcher buffer
+We can view and edit the latest stdout
+
+Let's do something with it!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+:qa!
+────────────────────────────────────────────────────────────────────────────────
+hello world!
+
+
+In our launcher buffer
+We can view and edit the latest stdout
+
+Let's do something with it!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+:qa!
+────────────────────────────────────────────────────────────────────────────────
+
+        Scripts
+
+    4 items
+
+  │ Input
+  │ Enter a command
+
+    capitalize.sh
+
+
+    duplicate_lines.sh
+
+
+    remove_vowels.sh
+
+
+
+
+
+
+    ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
+
+        Scripts
+
+    4 items
+
+  │ Input
+  │ Enter a command
+
+    capitalize.sh
+
+
+    duplicate_lines.sh
+
+
+    remove_vowels.sh
+
+
+
+
+
+
+    ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
+
+        Scripts
+
+    4 items
+
+    Input
+    Enter a command
+
+  │ capitalize.sh
+  │
+
+    duplicate_lines.sh
+
+
+    remove_vowels.sh
+
+
+
+
+
+
+    ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
+
+        Scripts
+
+    4 items
+
+    Input
+    Enter a command
+
+  │ capitalize.sh
+  │
+
+    duplicate_lines.sh
+
+
+    remove_vowels.sh
+
+
+
+
+
+
+    ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
+
+        Scripts
+
+    4 items
+
+    Input
+    Enter a command
+
+  │ capitalize.sh
+  │
+
+    duplicate_lines.sh
+
+
+    remove_vowels.sh
+
+
+
+
+
+
+    ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
+HELLO WORLD!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+<folders/6y/f4v_wcxj2ws5678d7nwzz_180000gn/T/4JDvRttKtc" 1L, 13B
+────────────────────────────────────────────────────────────────────────────────
+HELLO WORLD!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+<folders/6y/f4v_wcxj2ws5678d7nwzz_180000gn/T/4JDvRttKtc" 1L, 13B
+────────────────────────────────────────────────────────────────────────────────
+HELLO WORLD!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+
+────────────────────────────────────────────────────────────────────────────────
+HELLO WORLD!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+
+────────────────────────────────────────────────────────────────────────────────
+HELLO WORLD!
+
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HELLO WORLD!
+
+
+
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HELLO WORLD!
+
+
+Ah look!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HELLO WORLD!
+
+
+Ah look!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HELLO WORLD!
+
+
+Ah look!
+
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HELLO WORLD!
+
+
+Ah look!
+The output from `echo` has piped into the capitilization script
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HELLO WORLD!
+
+
+Ah look!
+The output from `echo` has piped into the capitilization script
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HELLO WORLD!
+
+
+Ah look!
+The output from `echo` has piped into the capitilization script
+
+
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HELLO WORLD!
+
+
+Ah look!
+The output from `echo` has piped into the capitilization script
+
+Let's run this through the other two scripts
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HELLO WORLD!
+
+
+Ah look!
+The output from `echo` has piped into the capitilization script
+
+Let's run this through the other two scripts
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HELLO WORLD!
+
+
+Ah look!
+The output from `echo` has piped into the capitilization script
+
+Let's run this through the other two scripts
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+
+────────────────────────────────────────────────────────────────────────────────
+HELLO WORLD!
+
+
+Ah look!
+The output from `echo` has piped into the capitilization script
+
+Let's run this through the other two scripts
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+:qa!
+────────────────────────────────────────────────────────────────────────────────
+HELLO WORLD!
+
+
+Ah look!
+The output from `echo` has piped into the capitilization script
+
+Let's run this through the other two scripts
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+:qa!
+────────────────────────────────────────────────────────────────────────────────
+
+        Scripts
+
+    4 items
+
+    Input
+    Enter a command
+
+  │ capitalize.sh
+  │
+
+    duplicate_lines.sh
+
+
+    remove_vowels.sh
+
+
+
+
+
+
+    ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
+
+        Scripts
+
+    4 items
+
+    Input
+    Enter a command
+
+  │ capitalize.sh
+  │
+
+    duplicate_lines.sh
+
+
+    remove_vowels.sh
+
+
+
+
+
+
+    ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
+
+        Scripts
+
+    4 items
+
+    Input
+    Enter a command
+
+    capitalize.sh
+
+
+  │ duplicate_lines.sh
+  │
+
+    remove_vowels.sh
+
+
+
+
+
+
+    ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
+
+        Scripts
+
+    4 items
+
+    Input
+    Enter a command
+
+    capitalize.sh
+
+
+  │ duplicate_lines.sh
+  │
+
+    remove_vowels.sh
+
+
+
+
+
+
+    ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
+
+        Scripts
+
+    4 items
+
+    Input
+    Enter a command
+
+    capitalize.sh
+
+
+  │ duplicate_lines.sh
+  │
+
+    remove_vowels.sh
+
+
+
+
+
+
+    ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
+
+        Scripts
+
+    4 items
+
+    Input
+    Enter a command
+
+    capitalize.sh
+
+
+    duplicate_lines.sh
+
+
+  │ remove_vowels.sh
+  │
+
+
+
+
+
+    ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
+
+        Scripts
+
+    4 items
+
+    Input
+    Enter a command
+
+    capitalize.sh
+
+
+    duplicate_lines.sh
+
+
+  │ remove_vowels.sh
+  │
+
+
+
+
+
+    ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
+
+        Scripts
+
+    4 items
+
+    Input
+    Enter a command
+
+    capitalize.sh
+
+
+    duplicate_lines.sh
+
+
+  │ remove_vowels.sh
+  │
+
+
+
+
+
+    ↑/k up • ↓/j down • / filter • q quit • ? more
+
+────────────────────────────────────────────────────────────────────────────────
+HLL WRLD!
+HLL WRLD!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+<folders/6y/f4v_wcxj2ws5678d7nwzz_180000gn/T/WQKcmv8FIW" 2L, 20B
+────────────────────────────────────────────────────────────────────────────────
+HLL WRLD!
+HLL WRLD!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+<folders/6y/f4v_wcxj2ws5678d7nwzz_180000gn/T/WQKcmv8FIW" 2L, 20B
+────────────────────────────────────────────────────────────────────────────────
+HLL WRLD!
+HLL WRLD!
+
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HLL WRLD!
+HLL WRLD!
+
+
+
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HLL WRLD!
+HLL WRLD!
+
+
+Nice!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HLL WRLD!
+HLL WRLD!
+
+
+Nice!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HLL WRLD!
+HLL WRLD!
+
+
+Nice! Capitalized, duplicated and trimmed!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HLL WRLD!
+HLL WRLD!
+
+
+Nice! Capitalized, duplicated and trimmed!
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HLL WRLD!
+HLL WRLD!
+
+
+Nice! Capitalized, duplicated and trimmed!
+
+
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HLL WRLD!
+HLL WRLD!
+
+
+Nice! Capitalized, duplicated and trimmed!
+
+By chaining scripts together
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HLL WRLD!
+HLL WRLD!
+
+
+Nice! Capitalized, duplicated and trimmed!
+
+By chaining scripts together
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HLL WRLD!
+HLL WRLD!
+
+
+Nice! Capitalized, duplicated and trimmed!
+
+By chaining scripts together
+
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HLL WRLD!
+HLL WRLD!
+
+
+Nice! Capitalized, duplicated and trimmed!
+
+By chaining scripts together
+You can start building complex workflows
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+-- INSERT --
+────────────────────────────────────────────────────────────────────────────────
+HLL WRLD!
+HLL WRLD!
+
+
+Nice! Capitalized, duplicated and trimmed!
+
+By chaining scripts together
+You can start building complex workflows
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+
+────────────────────────────────────────────────────────────────────────────────
+HLL WRLD!
+HLL WRLD!
+
+
+Nice! Capitalized, duplicated and trimmed!
+
+By chaining scripts together
+You can start building complex workflows
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+~
+
+────────────────────────────────────────────────────────────────────────────────
