@@ -91,7 +91,7 @@ func editItemUnderCursor(m model, itemType string) (tea.Model, tea.Cmd) {
 	if m.list.SelectedItem().(item).title != "Input" {
 		var pathToChain string
 		if itemType == "chain" {
-			pathToChain = backend.ResolvePath("~") + ".launcher/custom/" + m.list.SelectedItem().(item).chainItem.Name + ".json"
+			pathToChain = viper.GetString(C.PathConfig.LauncherDir.Name) + "/custom/" + m.list.SelectedItem().(item).chainItem.Name + ".json"
 		} else {
 			pathToChain = m.list.SelectedItem().(item).script.Command
 		}
