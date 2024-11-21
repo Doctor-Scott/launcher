@@ -26,15 +26,15 @@ type vimFinishedMsg []byte
 type updateStructureMsg bool
 type generateSelectedItemViewMsg bool
 
-func chainsUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
+func workflowsUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case updateStructureMsg:
-		m = generateSelectedItemView(createNewChainModelList(m))
+		m = m.setSelectedScriptsInView()
 		backend.MaybeAutoSaveChain(m.chain)
 		return m, tea.WindowSize()
 	case generateSelectedItemViewMsg:
-		m = generateSelectedItemView(m)
+		m = m.setSelectedScriptsInView()
 		return m, tea.WindowSize()
 	case vimFinishedMsg:
 		m.stdout = []byte(msg)
@@ -44,7 +44,7 @@ func chainsUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		}
 		if msg.String() == tea.KeyTab.String() {
-			return swapView(m)
+			return scriptView(m)
 		}
 		if msg.String() == viper.GetString(C.KeybindingConfig.Item.RunUnderCursor.Name) {
 			return runItemUnderCursor(m, "chain")
@@ -68,8 +68,8 @@ func chainsUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 			return editItemUnderCursor(m, "chain")
 		}
 		if msg.String() == viper.GetString(C.KeybindingConfig.Chain.LoadUnderCursor.Name) {
-			m, _ := loadCustomChain(m, m.list.SelectedItem().(item).chainItem.Name)
-			return swapView(m.(model))
+			m, _ := loadCustomChain(m, m.lists.workflows.SelectedItem().(item).chainItem.Name)
+			return scriptView(m.(model))
 		}
 		if msg.String() == viper.GetString(C.KeybindingConfig.Chain.LoadKnown.Name) {
 			return loadChain(m)
@@ -96,23 +96,23 @@ func chainsUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 
 	case tea.WindowSizeMsg:
 		h, v := docStyle.GetFrameSize()
-		m.list.SetSize(msg.Width-h, msg.Height-v)
+		m.lists.workflows.SetSize(msg.Width-h, msg.Height-v)
 	}
 
-	m.list, cmd = m.list.Update(msg)
+	m.lists.workflows, cmd = m.lists.workflows.Update(msg)
 	return m, cmd
 
 }
 
-func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
+func scriptsUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case updateStructureMsg:
-		m = generateSelectedItemView(createNewScriptModelList(m))
+		m = m.setSelectedScriptsInView()
 		backend.MaybeAutoSaveChain(m.chain)
 		return m, tea.WindowSize()
 	case generateSelectedItemViewMsg:
-		m = generateSelectedItemView(m)
+		m = m.setSelectedScriptsInView()
 		return m, tea.WindowSize()
 	case vimFinishedMsg:
 		m.stdout = []byte(msg)
@@ -122,7 +122,7 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		}
 		if msg.String() == tea.KeyTab.String() {
-			return swapView(m)
+			return workflowView(m)
 		}
 		if msg.String() == viper.GetString(C.KeybindingConfig.Item.RunUnderCursor.Name) {
 			return runItemUnderCursor(m, "script")
@@ -180,9 +180,9 @@ func listUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		// }
 	case tea.WindowSizeMsg:
 		h, v := docStyle.GetFrameSize()
-		m.list.SetSize(msg.Width-h, msg.Height-v)
+		m.lists.scripts.SetSize(msg.Width-h, msg.Height-v)
 	}
 
-	m.list, cmd = m.list.Update(msg)
+	m.lists.scripts, cmd = m.lists.scripts.Update(msg)
 	return m, cmd
 }

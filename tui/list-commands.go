@@ -13,7 +13,7 @@ import (
 )
 
 func debugModel(m model) {
-	for _, item := range m.list.Items() {
+	for _, item := range m.lists.scripts.Items() {
 		fmt.Printf("%+v", item)
 		fmt.Printf("\n")
 
@@ -37,38 +37,37 @@ func debug(m model) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func swapView(m model) (tea.Model, tea.Cmd) {
-	// swap view between script and chains
-	if m.currentView == "list" {
-		m.list.ResetSelected()
-		m.list = createChainList("")
-		m.currentView = "chains"
-	} else {
-		m.list.ResetSelected()
-		m.list = createScriptList(m.currentPath)
-		m.currentView = "list"
-	}
+func workflowView(m model) (tea.Model, tea.Cmd) {
+	// swap view between scripts and workflows
+	m.newView(WorkflowsView)
+	return m, func() tea.Msg { return updateStructureMsg(true) }
+}
+
+func scriptView(m model) (tea.Model, tea.Cmd) {
+	// swap view between workflows and scripts
+	m.newView(ScriptsView)
 	return m, func() tea.Msg { return updateStructureMsg(true) }
 }
 
 func addScriptToChain(m model, itemType string) (tea.Model, tea.Cmd) {
-	if m.list.SelectedItem().(item).title == "Input" {
+	if m.lists.scripts.SelectedItem().(item).title == "Input" && m.views.currentView == ScriptsView {
 		m.inputModel = initialInputModel("Script:", C.ADD_SCRIPT_TO_CHAIN)
-		m.currentView = "input"
+		m.newView(InputView)
 		return m, nil
 	} else {
 		if itemType == "chain" {
-			m.chain = backend.AddChainToChain(m.list.SelectedItem().(item).chainItem.Chain, m.chain)
-			return swapView(m)
+			m.chain = backend.AddChainToChain(m.lists.workflows.SelectedItem().(item).chainItem.Chain, m.chain)
+			return scriptView(m)
 		}
-		script := m.list.SelectedItem().(item).script
+		script := m.lists.scripts.SelectedItem().(item).script
 		m.chain = backend.AddScriptToChain(script, m.chain)
 		return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 	}
 }
 
 func refreshView(m model) (tea.Model, tea.Cmd) {
-	m.list.ResetSelected()
+	m.lists.scripts.ResetSelected()
+	m.lists.workflows.ResetSelected()
 	return m, func() tea.Msg { return tea.ClearScreen() }
 }
 
@@ -79,6 +78,8 @@ func runChain(m model) (tea.Model, tea.Cmd) {
 
 	m.stdout = lastScriptResult.Stdout
 	m = maybeSetLastFailedScript(m, lastScriptResult)
+	//TODO  maybeSetLastFailedChain(m, lastScriptResult)
+
 
 	if viper.GetBool(C.ClearChainAfterRun.Name) {
 		m.chain = backend.Chain{}
@@ -88,12 +89,14 @@ func runChain(m model) (tea.Model, tea.Cmd) {
 }
 
 func editItemUnderCursor(m model, itemType string) (tea.Model, tea.Cmd) {
-	if m.list.SelectedItem().(item).title != "Input" {
+	//WARN  Now that we hold bot states, will the selected item still hold input
+	// yes, this is the case
+	if m.lists.scripts.SelectedItem().(item).title != "Input" || m.views.currentView != ScriptsView {
 		var pathToChain string
 		if itemType == "chain" {
-			pathToChain = viper.GetString(C.PathConfig.LauncherDir.Name) + "/custom/" + m.list.SelectedItem().(item).chainItem.Name + ".json"
+			pathToChain = viper.GetString(C.PathConfig.LauncherDir.Name) + "/custom/" + m.lists.workflows.SelectedItem().(item).chainItem.Name + ".json"
 		} else {
-			pathToChain = m.list.SelectedItem().(item).script.Command
+			pathToChain = m.lists.scripts.SelectedItem().(item).script.Command
 		}
 
 		editor := os.ExpandEnv("$EDITOR")
@@ -111,7 +114,7 @@ func editItemUnderCursor(m model, itemType string) (tea.Model, tea.Cmd) {
 }
 
 func deleteChainUnderCursor(m model) (tea.Model, tea.Cmd) {
-	backend.DeleteChainConfig(m.list.SelectedItem().(item).chainItem.Name)
+	backend.DeleteChainConfig(m.lists.workflows.SelectedItem().(item).chainItem.Name)
 	return m, func() tea.Msg { return updateStructureMsg(true) }
 }
 
@@ -119,7 +122,8 @@ func openEditorInLauncherDirectory(m model) (tea.Model, tea.Cmd) {
 	editor := os.ExpandEnv("$EDITOR")
 	//WARN  Not sure if this works for all editors
 	cmd := exec.Command(editor, "--cmd", "cd"+m.currentPath+" | enew")
-	m.list.ResetSelected()
+	m.lists.scripts.ResetSelected()
+	m.lists.workflows.ResetSelected()
 
 	return m, tea.ExecProcess(cmd, func(err error) tea.Msg {
 		if err != nil {
@@ -168,26 +172,26 @@ func openWithVipe(m model) (tea.Model, tea.Cmd) {
 
 func loadChain(m model) (tea.Model, tea.Cmd) {
 	m.inputModel = initialInputModel("Name:", C.LOAD_CUSTOM_CHAIN)
-	m.currentView = "input"
+	m.newView(InputView)
 	return m, nil
 }
 
 func writeChain(m model) (tea.Model, tea.Cmd) {
 	m.inputModel = initialInputModel("Name:", C.SAVE_CUSTOM_CHAIN)
-	m.currentView = "input"
+	m.newView(InputView)
 	return m, nil
 }
 
 func clearState(m model) (tea.Model, tea.Cmd) {
 	m.chain = backend.Chain{}
 	m.stdout = []byte{}
-	m = generateSelectedItemView(m)
+	m = createNewScriptModelList(createNewChainModelList(m))
 	return m, func() tea.Msg { return updateStructureMsg(true) }
 }
 
 func runItemUnderCursor(m model, itemType string) (tea.Model, tea.Cmd) {
 	if itemType == "chain" {
-		chainResult := backend.RunChain(m.stdout, m.list.SelectedItem().(item).chainItem.Chain)
+		chainResult := backend.RunChain(m.stdout, m.lists.workflows.SelectedItem().(item).chainItem.Chain)
 		lastScriptResult := chainResult[len(chainResult)-1]
 
 		m.stdout = lastScriptResult.Stdout
@@ -200,12 +204,12 @@ func runItemUnderCursor(m model, itemType string) (tea.Model, tea.Cmd) {
 	}
 
 	// standard run of known script or input command
-	if m.list.SelectedItem().(item).title == "Input" {
+	if m.lists.scripts.SelectedItem().(item).title == "Input" {
 		m.inputModel = initialInputModel("Script:", C.RUN_SCRIPT)
-		m.currentView = "input"
+		m.newView(InputView)
 		return m, nil
 	} else {
-		scriptResult := backend.RunScript(m.list.SelectedItem().(item).script, m.stdout)
+		scriptResult := backend.RunScript(m.lists.scripts.SelectedItem().(item).script, m.stdout)
 		m.stdout = scriptResult.Stdout
 		m = maybeSetLastFailedScript(m, scriptResult)
 		cmd := func() tea.Msg {
@@ -217,9 +221,9 @@ func runItemUnderCursor(m model, itemType string) (tea.Model, tea.Cmd) {
 }
 
 func runScriptWithArgs(m model) (tea.Model, tea.Cmd) {
-	if m.list.SelectedItem().(item).title != "Input" {
+	if m.lists.scripts.SelectedItem().(item).title != "Input" {
 		m.inputModel = initialInputModel("Args:", C.ADD_ARGS_TO_SCRIPT_AND_RUN)
-		m.currentView = "input"
+		m.newView(InputView)
 		cmd := func() tea.Msg {
 			return tea.ClearScreen()
 		}
@@ -229,14 +233,14 @@ func runScriptWithArgs(m model) (tea.Model, tea.Cmd) {
 }
 
 func addScriptWithArgs(m model) (tea.Model, tea.Cmd) {
-	if m.list.SelectedItem().(item).title != "Input" {
+	if m.lists.scripts.SelectedItem().(item).title != "Input" {
 		m.inputModel = initialInputModel("Args:", C.ADD_ARGS_TO_SCRIPT_THEN_ADD_TO_CHAIN)
-		m.currentView = "input"
+		m.newView(InputView)
 	}
 	return m, nil
 }
 
 func removeScriptFromChain(m model) (tea.Model, tea.Cmd) {
-	m.chain = backend.RemoveScriptFromChain(m.list.SelectedItem().(item).script, m.chain)
+	m.chain = backend.RemoveScriptFromChain(m.lists.scripts.SelectedItem().(item).script, m.chain)
 	return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 }

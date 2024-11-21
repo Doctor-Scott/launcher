@@ -95,11 +95,11 @@ func createChainList(path string) list.Model {
 }
 
 func createNewScriptModelList(m model) model {
-	m.list = createScriptList(m.currentPath)
+	m.lists.scripts = createScriptList(m.currentPath)
 	return m
 }
 
 func createNewChainModelList(m model) model {
-	m.list = createChainList("")
+	m.lists.workflows = createChainList("")
 	return m
 }

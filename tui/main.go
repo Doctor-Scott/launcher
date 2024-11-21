@@ -15,13 +15,41 @@ import (
 var docStyle = lipgloss.NewStyle().Margin(1, 2)
 
 type model struct {
-	list                list.Model
+	lists               lists
 	stdout              []byte
 	currentPath         string
 	chain               backend.Chain
-	currentView         string
+	views               views
 	inputModel          inputModel
 	lastFaildScriptName string
+}
+
+type ViewState int
+
+const (
+	ScriptsView ViewState = iota
+	WorkflowsView
+	InputView
+)
+
+var stateName = map[ViewState]string{
+	ScriptsView:   "scripts",
+	WorkflowsView: "workflows",
+	InputView:     "input",
+}
+
+func (ss ViewState) String() string {
+	return stateName[ss]
+}
+
+type views struct {
+	currentView  ViewState
+	previousView ViewState
+}
+
+type lists struct {
+	scripts   list.Model
+	workflows list.Model
 }
 
 func (m model) Init() tea.Cmd {
@@ -48,7 +76,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case C.ADD_ARGS_TO_SCRIPT_AND_RUN:
 			scriptArgs := m.inputModel.textInput.Value()
-			script := backend.AddArgsToScript(m.list.SelectedItem().(item).script, scriptArgs)
+			script := backend.AddArgsToScript(m.lists.scripts.SelectedItem().(item).script, scriptArgs)
 
 			scriptResult := backend.RunScript(script, m.stdout)
 			m.stdout = scriptResult.Stdout
@@ -61,7 +89,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 		case C.ADD_ARGS_TO_SCRIPT_THEN_ADD_TO_CHAIN:
-			script := backend.AddArgsToScript(m.list.SelectedItem().(item).script, m.inputModel.textInput.Value())
+			script := backend.AddArgsToScript(m.lists.scripts.SelectedItem().(item).script, m.inputModel.textInput.Value())
 			m.chain = backend.AddScriptToChain(script, m.chain)
 			return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 		case C.SAVE_CUSTOM_CHAIN:
@@ -75,28 +103,57 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 	case inputRejectedMsg:
-		m.currentView = "list"
+		m.swapViews()
 		return m, nil
 	}
 
-	if m.currentView == "list" || m.inputModel.Selected {
+	return selectAndDisplayView(m, msg)
+}
+
+func selectAndDisplayView(m model, msg tea.Msg) (tea.Model, tea.Cmd) {
+	if m.inputModel.Selected {
 		m.inputModel.Selected = false
-		m.currentView = "list"
-		return listUpdate(msg, m)
+		m.swapViews()
 	}
 
-	if m.currentView == "chains" {
-		return chainsUpdate(msg, m)
+	if m.views.currentView == ScriptsView {
+		return scriptsUpdate(msg, m)
 	}
+
+	if m.views.currentView == WorkflowsView {
+		return workflowsUpdate(msg, m)
+	}
+
 	inputModel, cmd := inputUpdate(m.inputModel, msg)
 	m.inputModel = inputModel
 
 	return m, cmd
+
+}
+
+// trying out a method receiver
+func (m *model) swapViews() {
+	state := m.views.currentView
+	m.views.currentView = m.views.previousView
+	m.views.previousView = state
+}
+
+func (m *model) newView(view ViewState) {
+	alreadyInView := m.views.currentView == view
+	if alreadyInView {
+		return
+	}
+	m.views.previousView = m.views.currentView
+	m.views.currentView = view
 }
 
 func (m model) View() string {
-	if m.currentView == "list" || m.currentView == "chains" || m.inputModel.Selected {
-		return docStyle.Render(m.list.View())
+	if m.views.currentView == ScriptsView {
+		return docStyle.Render(m.lists.scripts.View())
+	}
+
+	if m.views.currentView == WorkflowsView {
+		return docStyle.Render(m.lists.workflows.View())
 	}
 
 	return inputView(m.inputModel)
@@ -107,10 +164,10 @@ func Start(path string) {
 
 	m := model{
 		currentPath: path,
-		currentView: "list",
+		views:       views{currentView: ScriptsView},
 		chain:       backend.ReadChainConfig(),
 		stdout:      backend.ReadStdin(),
-		list:        createScriptList(path),
+		lists:       lists{scripts: createScriptList(path), workflows: createChainList("")},
 	}
 	// fmt.Printf("Loaded chain: %+v\n", m.chain)
 

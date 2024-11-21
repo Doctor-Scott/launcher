@@ -8,18 +8,18 @@ import (
 	"github.com/spf13/viper"
 )
 
-func generateSelectedItemView(m model) model {
+func (m model) setSelectedScriptsInView() model {
 	if len(m.chain) == 0 {
 		return deselectAllItems(m)
 	}
-	for i, listItem := range m.list.Items() {
+	for i, listItem := range m.lists.scripts.Items() {
 		if item, ok := listItem.(item); ok {
 			for _, chainScript := range m.chain {
 				if item.script.Name == chainScript.Name {
-					m.list.SetItem(i, selectItem(m, item))
+					m.lists.scripts.SetItem(i, selectItem(m, item))
 					break
 				} else {
-					m.list.SetItem(i, deselectItem(item))
+					m.lists.scripts.SetItem(i, deselectItem(item))
 				}
 			}
 		}
@@ -29,11 +29,11 @@ func generateSelectedItemView(m model) model {
 }
 
 func generateFailedItemView(m model) model {
-	for i, listItem := range m.list.Items() {
+	for i, listItem := range m.lists.scripts.Items() {
 		if item, ok := listItem.(item); ok {
 			if item.script.Name == m.lastFaildScriptName {
 				item.failed = true
-				m.list.SetItem(i, item)
+				m.lists.scripts.SetItem(i, item)
 			}
 		}
 	}
@@ -61,9 +61,9 @@ func deselectItem(item item) item {
 }
 
 func deselectAllItems(m model) model {
-	for i, listItem := range m.list.Items() {
+	for i, listItem := range m.lists.scripts.Items() {
 		if item, ok := listItem.(item); ok {
-			m.list.SetItem(i, deselectItem(item))
+			m.lists.scripts.SetItem(i, deselectItem(item))
 		}
 	}
 	return m
