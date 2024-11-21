@@ -1,5 +1,5 @@
 _build/launcher
 *__debug_bin*
 *.DS_Store
-demo/custom/Echo, capitalize, duplicate and trim.json
-demo/LAUNCHER_AUTOSAVE.json
+*Echo, capitalize, duplicate and trim.json
+*LAUNCHER_AUTOSAVE.json
