@@ -1,7 +1,9 @@
 Set FontSize 20
 Set Width 1000
 Set Height 700
-Output chains.gif
+Set TypingSpeed 0.1s
+Output ./outputs/gifs/chains.gif
+Output ./validation/chain_final_result.ascii
 Set Shell zsh
 Env VISUAL "vim"
 
@@ -45,7 +47,7 @@ Type "j"
 Sleep 0.5s
 Type "a"
 Sleep 2s
-Screenshot screenshots/chain_view.png
+Screenshot ./outputs/screenshots/chain_view.png
 Type "R"
 Sleep 1s
 Type "v"

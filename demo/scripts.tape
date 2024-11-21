@@ -1,7 +1,9 @@
 Set FontSize 20
 Set Width 1000
 Set Height 700
-Output scripts.gif
+Set TypingSpeed 0.1s
+Output ./outputs/gifs/scripts.gif
+Output ./validation/script_final_result.ascii
 Set Shell zsh
 Env VISUAL "vim"
 
@@ -9,8 +11,9 @@ Sleep 1s
 Type "launcher"
 Sleep 1s
 Enter
-Sleep 2s
-Screenshot screenshots/script_view.png
+Sleep 1s
+Screenshot ./outputs/screenshots/script_view.png
+Sleep 1s
 Enter
 Sleep 0.5s
 Type@150ms "echo hello world!"
@@ -72,6 +75,9 @@ Sleep 1.5s
 Type@100ms " Capitalized, duplicated and trimmed!"
 Sleep 2s
 Enter 2
-Type@100ms "Chaining scripts together can allow you to build complex workflows"
+Type@100ms "By chaining scripts together"
+Sleep 0.5s
+Enter
+Type@100ms "You can start building complex workflows"
 Escape
 Sleep 5s

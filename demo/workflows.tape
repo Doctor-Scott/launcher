@@ -1,7 +1,9 @@
 Set FontSize 20
 Set Width 1000
 Set Height 700
-Output workflows.gif
+Set TypingSpeed 0.1s
+Output ./outputs/gifs/workflows.gif
+Output ./validation/workflow_final_result.ascii
 Set Shell zsh
 Env VISUAL "vim"
 
@@ -24,7 +26,7 @@ Sleep 0.5s
 Enter
 Sleep 1.5s
 Tab
-Screenshot screenshots/workflow_view.png
+Screenshot ./outputs/screenshots/workflow_view.png
 Sleep 3.5s
 Enter
 Type "v"
