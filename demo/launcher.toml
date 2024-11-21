@@ -1,5 +1,5 @@
 autosave = false
 
 [paths]
-launcher_dir = './'
-script_dir = './scripts/'
+launcher_dir = './assets/'
+script_dir = './assets/scripts/'
