@@ -110,8 +110,10 @@ func AddArgsToScript(script Script, argsString string) Script {
 	return script
 }
 
+// TODO  Maybe create wrappers around these run functions so that tea can run them without halting the UI
 func RunScript(script Script, stdin []byte) ScriptResult {
-	cmd := exec.Command(script.Command, script.Args...)
+	scriptCommand := os.ExpandEnv(script.Command)
+	cmd := exec.Command(scriptCommand, script.Args...)
 
 	if len(stdin) > 0 {
 		stdinBuffer := bytes.NewBuffer(stdin)
