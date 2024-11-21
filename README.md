@@ -1,9 +1,9 @@
 # Launcher
 A script launch pad, written in Go! 
 <p float="middle">
-    <img src="./demo/screenshots/script_view.png" alt="script_view" width="250"/>
-    <img src="./demo/screenshots/chain_view.png" alt="script_view" width="250"/>
-    <img src="./demo/screenshots/workflow_view.png" alt="script_view" width="250"/>
+    <img src="./vhs/outputs/screenshots/script_view.png" alt="script_view" width="250"/>
+    <img src="./vhs/outputs/screenshots/chain_view.png" alt="script_view" width="250"/>
+    <img src="./vhs/outputs/screenshots/workflow_view.png" alt="script_view" width="250"/>
 </p>
 
 ## Description
@@ -49,7 +49,7 @@ Building it seemed like a fun challenge too!
 
 
 ### Workflows:
-<img src="./demo/screenshots/workflow_view.png" alt="script_view" width="400"/>
+<img src="./vhs/outputs/screenshots/workflow_view.png" alt="script_view" width="400"/>
 
 These are the core concept of the launcher, they are saved as `json` files in the `launcher_dir/custom` directory.
 
@@ -110,7 +110,7 @@ You can view and edit the underlying file for a script in the list with the `ope
 ---
 <details>
     <summary>Scripts example (click to expand)</summary>
-<img src="./demo/scripts.gif" alt="script_view" width="600"/>
+<img src="./vhs/outputs/gifs/scripts.gif" alt="script_view" width="600"/>
 </details>
 
 ---
@@ -121,7 +121,7 @@ Chain scripts together to create workflows
 ---
 <details>
     <summary>Chain example (click to expand)</summary>
-<img src="./demo/chains.gif" alt="chain_view" width="600"/>
+<img src="./vhs/outputs/gifs/chains.gif" alt="chain_view" width="600"/>
 </details>
 
 ---
@@ -133,7 +133,7 @@ You can view and edit the underlying `json` for a workflow with the `open_item_u
 ---
 <details>
     <summary>Workflow example (click to expand)</summary>
-<img src="./demo/workflows.gif" alt="workflow_view" width="600"/>
+<img src="./vhs/outputs/gifs/workflows.gif" alt="workflow_view" width="600"/>
 </details>
 
 ---
@@ -159,19 +159,19 @@ Useful when you have multiple directories with scripts
 ## Examples
 <details>
     <summary>Scripts</summary>
-<img src="./demo/scripts.gif" alt="script_view" width="600"/>
+<img src="./vhs/outputs/gifs/scripts.gif" alt="script_view" width="600"/>
 </details>
 
 ---
 <details>
     <summary>Chains</summary>
-<img src="./demo/chains.gif" alt="chain_view" width="600"/>
+<img src="./vhs/outputs/gifs/chains.gif" alt="chain_view" width="600"/>
 </details>
 
 ---
 <details>
     <summary>Workflows</summary>
-<img src="./demo/workflows.gif" alt="workflow_view" width="600"/>
+<img src="./vhs/outputs/gifs/workflows.gif" alt="workflow_view" width="600"/>
 </details>
 
 ---
