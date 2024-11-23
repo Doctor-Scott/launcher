@@ -7,6 +7,7 @@ const ADD_SCRIPT_TO_CHAIN int = 2
 const ADD_ARGS_TO_SCRIPT_THEN_ADD_TO_CHAIN int = 3
 const SAVE_CUSTOM_CHAIN int = 4
 const LOAD_CUSTOM_CHAIN int = 5
+const RUN_LAUNCHER_COMMAND = 6
 
 // List constants
 const INPUT_COMMAND_NAME string = "command"

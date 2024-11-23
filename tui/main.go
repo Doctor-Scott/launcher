@@ -63,6 +63,11 @@ func loadCustomChain(m model, name string) (tea.Model, tea.Cmd) {
 	return m, func() tea.Msg { return generateSelectedItemViewMsg(true) }
 }
 
+func runLauncherCommandFromInput(m model, command string) (tea.Model, tea.Cmd) {
+	backend.RunLauncherCommand(command)
+	return m, nil
+}
+
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg.(type) {
 	case inputFinishedMsg:
@@ -100,6 +105,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case C.LOAD_CUSTOM_CHAIN:
 			name := m.inputModel.textInput.Value()
 			return loadCustomChain(m, name)
+		case C.RUN_LAUNCHER_COMMAND:
+			command := m.inputModel.textInput.Value()
+			return runLauncherCommandFromInput(m, command)
 		}
 
 	case inputRejectedMsg:

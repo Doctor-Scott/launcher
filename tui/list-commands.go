@@ -37,6 +37,13 @@ func debug(m model) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
+func inputLauncherCommand(m model) (tea.Model, tea.Cmd) {
+	m.newView(InputView)
+	m.inputModel = createNewInputModel("> ", C.RUN_LAUNCHER_COMMAND)
+	return m, nil
+
+}
+
 func workflowView(m model) (tea.Model, tea.Cmd) {
 	// swap view between scripts and workflows
 	m.newView(WorkflowsView)
@@ -51,7 +58,7 @@ func scriptView(m model) (tea.Model, tea.Cmd) {
 
 func addScriptToChain(m model, itemType string) (tea.Model, tea.Cmd) {
 	if m.lists.scripts.SelectedItem().(item).title == "Input" && m.views.currentView == ScriptsView {
-		m.inputModel = initialInputModel("Script:", C.ADD_SCRIPT_TO_CHAIN)
+		m.inputModel = createNewInputModel("Script:", C.ADD_SCRIPT_TO_CHAIN)
 		m.newView(InputView)
 		return m, nil
 	} else {
@@ -80,6 +87,10 @@ func runChain(m model) (tea.Model, tea.Cmd) {
 	m = maybeSetLastFailedScript(m, lastScriptResult)
 	//TODO  maybeSetLastFailedChain(m, lastScriptResult)
 
+	if !lastScriptResult.Success {
+		fmt.Println(lastScriptResult.Stderr)
+		return m, nil
+	}
 
 	if viper.GetBool(C.ClearChainAfterRun.Name) {
 		m.chain = backend.Chain{}
@@ -171,13 +182,13 @@ func openWithVipe(m model) (tea.Model, tea.Cmd) {
 }
 
 func loadChain(m model) (tea.Model, tea.Cmd) {
-	m.inputModel = initialInputModel("Name:", C.LOAD_CUSTOM_CHAIN)
+	m.inputModel = createNewInputModel("Name:", C.LOAD_CUSTOM_CHAIN)
 	m.newView(InputView)
 	return m, nil
 }
 
 func writeChain(m model) (tea.Model, tea.Cmd) {
-	m.inputModel = initialInputModel("Name:", C.SAVE_CUSTOM_CHAIN)
+	m.inputModel = createNewInputModel("Name:", C.SAVE_CUSTOM_CHAIN)
 	m.newView(InputView)
 	return m, nil
 }
@@ -195,6 +206,10 @@ func runItemUnderCursor(m model, itemType string) (tea.Model, tea.Cmd) {
 		lastScriptResult := chainResult[len(chainResult)-1]
 
 		m.stdout = lastScriptResult.Stdout
+		if !lastScriptResult.Success {
+			fmt.Println(lastScriptResult.Stderr)
+			return m, nil
+		}
 		m = maybeSetLastFailedScript(m, lastScriptResult)
 
 		cmd := func() tea.Msg {
@@ -205,7 +220,7 @@ func runItemUnderCursor(m model, itemType string) (tea.Model, tea.Cmd) {
 
 	// standard run of known script or input command
 	if m.lists.scripts.SelectedItem().(item).title == "Input" {
-		m.inputModel = initialInputModel("Script:", C.RUN_SCRIPT)
+		m.inputModel = createNewInputModel("Script:", C.RUN_SCRIPT)
 		m.newView(InputView)
 		return m, nil
 	} else {
@@ -222,7 +237,7 @@ func runItemUnderCursor(m model, itemType string) (tea.Model, tea.Cmd) {
 
 func runScriptWithArgs(m model) (tea.Model, tea.Cmd) {
 	if m.lists.scripts.SelectedItem().(item).title != "Input" {
-		m.inputModel = initialInputModel("Args:", C.ADD_ARGS_TO_SCRIPT_AND_RUN)
+		m.inputModel = createNewInputModel("Args:", C.ADD_ARGS_TO_SCRIPT_AND_RUN)
 		m.newView(InputView)
 		cmd := func() tea.Msg {
 			return tea.ClearScreen()
@@ -234,7 +249,7 @@ func runScriptWithArgs(m model) (tea.Model, tea.Cmd) {
 
 func addScriptWithArgs(m model) (tea.Model, tea.Cmd) {
 	if m.lists.scripts.SelectedItem().(item).title != "Input" {
-		m.inputModel = initialInputModel("Args:", C.ADD_ARGS_TO_SCRIPT_THEN_ADD_TO_CHAIN)
+		m.inputModel = createNewInputModel("Args:", C.ADD_ARGS_TO_SCRIPT_THEN_ADD_TO_CHAIN)
 		m.newView(InputView)
 	}
 	return m, nil

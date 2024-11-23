@@ -46,6 +46,9 @@ func workflowsUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		if msg.String() == tea.KeyTab.String() {
 			return scriptView(m)
 		}
+		if msg.String() == ":" {
+			return inputLauncherCommand(m)
+		}
 		if msg.String() == viper.GetString(C.KeybindingConfig.Item.RunUnderCursor.Name) {
 			return runItemUnderCursor(m, "chain")
 		}
@@ -123,6 +126,9 @@ func scriptsUpdate(msg tea.Msg, m model) (tea.Model, tea.Cmd) {
 		}
 		if msg.String() == tea.KeyTab.String() {
 			return workflowView(m)
+		}
+		if msg.String() == ":" {
+			return inputLauncherCommand(m)
 		}
 		if msg.String() == viper.GetString(C.KeybindingConfig.Item.RunUnderCursor.Name) {
 			return runItemUnderCursor(m, "script")

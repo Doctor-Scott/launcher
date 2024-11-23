@@ -2,13 +2,42 @@ package globalConstants
 
 import "os"
 
+type ConfigItem interface {
+	GetName() string
+	GetDefaultValue() interface{}
+}
+
 type stringConfigItem struct {
 	Name         string
 	DefaultValue string
 }
+
+func (s stringConfigItem) GetName() string {
+	return s.Name
+}
+
+func (s stringConfigItem) GetDefaultValue() interface{} {
+	return s.DefaultValue
+}
+
 type boolConfigItem struct {
 	Name         string
 	DefaultValue bool
+}
+
+func (b boolConfigItem) GetName() string {
+	return b.Name
+}
+
+func (b boolConfigItem) GetDefaultValue() interface{} {
+	return b.DefaultValue
+}
+
+// SetConfigValue sets a configuration value using the provided setter function
+func SetConfigValue(setter func(string, interface{}), items ...ConfigItem) {
+	for _, item := range items {
+		setter(item.GetName(), item.GetDefaultValue())
+	}
 }
 
 type pathConfig struct {
@@ -127,4 +156,42 @@ var ColorConfig = colorConfig{
 	stringConfigItem{"colors.input_title", "#e64d00"},
 	stringConfigItem{"colors.cursor", "#6fe6fc"},
 	stringConfigItem{"colors.selected_script", "#6fe600"},
+}
+
+var DefaultItems = []ConfigItem{
+	ClearChainAfterRun,
+	Autosave,
+	// Colors
+	ColorConfig.ScriptTitle,
+	ColorConfig.ChainTitle,
+	ColorConfig.InputTitle,
+	ColorConfig.Cursor,
+	ColorConfig.SelectedScript,
+	// Script Description
+	SelectedScriptDescriptionConfig.UseAnd,
+	SelectedScriptDescriptionConfig.ChainSeparator,
+	SelectedScriptDescriptionConfig.ChainTotalSeparator,
+	SelectedScriptDescriptionConfig.Prefix,
+	// Paths
+	PathConfig.LauncherDir,
+	PathConfig.ScriptDir,
+	// Keybindings
+	KeybindingConfig.Item.RunUnderCursor,
+	KeybindingConfig.Item.AddToChain,
+	KeybindingConfig.Script.AddArgsAndRun,
+	KeybindingConfig.Script.AddArgsThenAddToChain,
+	KeybindingConfig.Script.RemoveFromChain,
+	KeybindingConfig.Chain.RunChain,
+	KeybindingConfig.Chain.LoadKnown,
+	KeybindingConfig.Chain.LoadUnderCursor,
+	KeybindingConfig.Chain.DeleteUnderCursor,
+	KeybindingConfig.Chain.Write,
+	KeybindingConfig.Edit.OpenStdout,
+	KeybindingConfig.Edit.OpenEditor,
+	KeybindingConfig.Edit.OpenConfig,
+	KeybindingConfig.Edit.OpenItemUnderCursor,
+	KeybindingConfig.ClearState,
+	KeybindingConfig.WriteConfig,
+	KeybindingConfig.RefreshView,
+	KeybindingConfig.Debug,
 }

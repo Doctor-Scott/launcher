@@ -21,7 +21,7 @@ type inputModel struct {
 	returnCommand int
 }
 
-func initialInputModel(prompt string, returnCommand int) inputModel {
+func createNewInputModel(prompt string, returnCommand int) inputModel {
 	ti := textinput.New()
 	// ti.Placeholder = prompt
 	ti.Focus()
